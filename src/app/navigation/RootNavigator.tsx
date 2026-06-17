@@ -9,6 +9,7 @@ import { SplashScreen } from '@/features/auth/screens/SplashScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
 import { AuthPlaceholderScreen } from '@/features/auth/screens/AuthPlaceholderScreen';
 import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDeepLinkScreen';
+import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
 import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
 
@@ -72,7 +73,7 @@ export function RootNavigator() {
             />
             <Stack.Screen
               name={Routes.VerifyEmail}
-              component={AuthPlaceholderScreen}
+              component={VerifyEmailScreen}
               options={{ title: 'Подтверждение email' }}
             />
             <Stack.Screen
