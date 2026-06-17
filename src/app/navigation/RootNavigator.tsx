@@ -13,6 +13,7 @@ import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDe
 import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
+import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
 import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
 
@@ -68,6 +69,11 @@ export function RootNavigator() {
               name={Routes.EmailVerifyDeepLink}
               component={EmailVerifyDeepLinkScreen}
               options={{ title: 'Подтверждение email' }}
+            />
+            <Stack.Screen
+              name={Routes.UiKitDemo}
+              component={UiKitDemoScreen}
+              options={{ title: 'UI Kit' }}
             />
           </>
         ) : (
