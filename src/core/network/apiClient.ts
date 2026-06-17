@@ -148,6 +148,7 @@ export function createApiClient() {
         originalRequest.headers.Authorization = `Bearer ${newAccess}`;
         return client.request(originalRequest);
       } catch (refreshError) {
+        await handleSessionExpired();
         return Promise.reject(parseApiError(refreshError));
       }
     },
