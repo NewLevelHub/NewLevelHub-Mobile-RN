@@ -10,6 +10,15 @@ import { mapApiUser } from '@/shared/lib/mapUser';
 import { API } from '@/shared/api/endpoints';
 import type { User } from '@/shared/types';
 
+interface RegisterPayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  password: string;
+  password_confirm: string;
+}
+
 interface AuthState {
   user: User | null;
   isLoading: boolean;
@@ -17,6 +26,7 @@ interface AuthState {
 
   bootstrap: () => Promise<void>;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<User>;
   logout: () => Promise<void>;
   logoutLocal: () => Promise<void>;
   fetchMe: () => Promise<void>;
@@ -30,6 +40,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setAuthenticatedUser: (user) => {
     set({ user, isAuthenticated: true });
+  },
+
+  register: async (payload) => {
+    try {
+      const { data } = await apiClient.post(API.auth.register, payload);
+      const tokens = data.tokens as { access: string; refresh: string };
+      await tokenStorage.saveTokens(tokens.access, tokens.refresh);
+      return mapApiUser(data.user as Record<string, unknown>);
+    } catch (error) {
+      throw parseApiError(error);
+    }
   },
 
   login: async (email, password, rememberMe = false) => {
