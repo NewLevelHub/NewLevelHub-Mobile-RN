@@ -9,7 +9,8 @@ export const Routes = {
   ResetPassword: 'ResetPassword',
   Home: 'Home',
   Profile: 'Profile',
-  UiKitDemo: 'UiKitDemo',
+  ProfileEdit: 'ProfileEdit',
+  UiKit: 'UiKit',
 } as const;
 
 export type RootStackParamList = {
@@ -23,7 +24,8 @@ export type RootStackParamList = {
   [Routes.ResetPassword]: { token?: string; title?: string; subtitle?: string };
   [Routes.Home]: undefined;
   [Routes.Profile]: undefined;
-  [Routes.UiKitDemo]: undefined;
+  [Routes.ProfileEdit]: undefined;
+  [Routes.UiKit]: undefined;
 };
 
-export const authRequiredRoutes = new Set<string>([Routes.Home, Routes.Profile]);
+export const authRequiredRoutes = new Set<string>([Routes.Home, Routes.Profile, Routes.ProfileEdit]);

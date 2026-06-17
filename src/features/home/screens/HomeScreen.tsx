@@ -72,7 +72,7 @@ export function HomeScreen({ navigation }: Props) {
       </View>
 
       <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
-      <AppButton onPress={() => navigation.navigate(Routes.UiKitDemo)} title="UI Kit Demo" variant="secondary" />
+      <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
       <AppButton onPress={handleLogout} title="Выйти" variant="text" />
     </View>
   );
