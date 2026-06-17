@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
@@ -15,6 +15,18 @@ type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
 export function HomeScreen({ navigation }: Props) {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Выйти',
+      'Вы уверены, что хотите выйти из аккаунта?',
+      [
+        { text: 'Отмена', style: 'cancel' },
+        { text: 'Выйти', style: 'destructive', onPress: () => void logout() },
+      ],
+    );
+  };
+
   const [pingStatus, setPingStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
   const [pingMessage, setPingMessage] = useState<string>();
 
@@ -57,7 +69,7 @@ export function HomeScreen({ navigation }: Props) {
       </View>
 
       <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
-      <AppButton onPress={() => void logout()} title="Выйти" variant="text" />
+      <AppButton onPress={handleLogout} title="Выйти" variant="text" />
     </View>
   );
 }

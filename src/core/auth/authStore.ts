@@ -54,8 +54,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
+    const refresh = await tokenStorage.getRefreshToken();
     try {
-      await apiClient.post(API.auth.logout, {});
+      if (refresh) {
+        await apiClient.post(API.auth.logout, { refresh });
+      }
     } finally {
       await get().logoutLocal();
     }
