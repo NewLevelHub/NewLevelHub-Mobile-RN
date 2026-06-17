@@ -139,6 +139,14 @@ export function LoginScreen({ navigation }: Props) {
           title="Нет аккаунта? Зарегистрироваться"
           variant="text"
         />
+
+        {__DEV__ ? (
+          <AppButton
+            onPress={() => navigation.navigate(Routes.ResetPassword, {})}
+            title="🐞 Debug: токен сброса пароля"
+            variant="text"
+          />
+        ) : null}
       </ScrollView>
     </KeyboardAvoidingView>
   );

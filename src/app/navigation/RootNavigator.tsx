@@ -7,11 +7,12 @@ import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 import { useAuthStore } from '@/core/auth/authStore';
 import { SplashScreen } from '@/features/auth/screens/SplashScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
-import { AuthPlaceholderScreen } from '@/features/auth/screens/AuthPlaceholderScreen';
 import { InviteRegisterScreen } from '@/features/auth/screens/InviteRegisterScreen';
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDeepLinkScreen';
 import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
+import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
+import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
 import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
 
@@ -27,6 +28,10 @@ const linking: LinkingOptions<RootStackParamList> = {
       },
       [Routes.Invite]: {
         path: 'invite',
+        parse: { token: (token: string) => token },
+      },
+      [Routes.ResetPassword]: {
+        path: 'reset-password',
         parse: { token: (token: string) => token },
       },
     },
@@ -94,12 +99,12 @@ export function RootNavigator() {
             />
             <Stack.Screen
               name={Routes.ForgotPassword}
-              component={AuthPlaceholderScreen}
+              component={ForgotPasswordScreen}
               options={{ title: 'Сброс пароля' }}
             />
             <Stack.Screen
               name={Routes.ResetPassword}
-              component={AuthPlaceholderScreen}
+              component={ResetPasswordScreen}
               options={{ title: 'Новый пароль' }}
             />
           </>
