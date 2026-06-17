@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
 import { useProfile } from '@/features/users/hooks/useProfile';
 import { AppButton } from '@/shared/ui/AppButton';
+import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 
 export function ProfilePlaceholderScreen() {
   const logout = useAuthStore((state) => state.logout);
   const { profile } = useProfile();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleLogout = () => {
     Alert.alert(
@@ -40,6 +44,11 @@ export function ProfilePlaceholderScreen() {
           <Text style={styles.meta}>Роль: {profile.role}</Text>
         </View>
       ) : null}
+      <AppButton
+        onPress={() => navigation.navigate(Routes.ProfileEdit)}
+        title="Редактировать профиль"
+        variant="secondary"
+      />
       <AppButton
         onPress={handleLogout}
         title={isLoggingOut ? 'Выход...' : 'Выйти'}
