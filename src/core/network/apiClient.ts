@@ -2,6 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 import { apiConfig } from '@/core/config/apiConfig';
 import { tokenStorage } from '@/core/auth/tokenStorage';
+import { attachDebugLogInterceptor } from '@/core/network/debugLogInterceptor';
 import { parseApiError } from '@/core/network/errorParser';
 import { API } from '@/shared/api/endpoints';
 
@@ -151,6 +152,10 @@ export function createApiClient() {
       }
     },
   );
+
+  if (__DEV__) {
+    attachDebugLogInterceptor(client);
+  }
 
   return client;
 }

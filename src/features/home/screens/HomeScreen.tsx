@@ -4,9 +4,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 import { useAuthStore } from '@/core/auth/authStore';
-import { apiClient } from '@/core/network/apiClient';
+import { ConnectivityProbe } from '@/core/network/connectivityProbe';
 import { colors } from '@/core/theme/colors';
-import { API } from '@/shared/api/endpoints';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppLoader } from '@/shared/ui/AppLoader';
 
@@ -35,18 +34,22 @@ export function HomeScreen({ navigation }: Props) {
 
     const probe = async () => {
       setPingStatus('loading');
-      try {
-        const [ping, health] = await Promise.all([
-          apiClient.get(API.core.ping),
-          apiClient.get(API.core.health),
-        ]);
-        if (cancelled) return;
-        setPingStatus('ok');
-        setPingMessage(`API OK · ping ${ping.status} · health ${health.status}`);
-      } catch {
-        if (cancelled) return;
-        setPingStatus('error');
-        setPingMessage('Не удалось проверить API');
+      const result = await new ConnectivityProbe().run();
+      if (cancelled) return;
+
+      switch (result.kind) {
+        case 'ok':
+          setPingStatus('ok');
+          setPingMessage(`API OK · ping 200 · health ${result.health.status}`);
+          break;
+        case 'health_unavailable':
+          setPingStatus('error');
+          setPingMessage('Сервис временно недоступен. Попробуйте позже.');
+          break;
+        case 'ping_failed':
+          setPingStatus('error');
+          setPingMessage('Не удалось проверить API');
+          break;
       }
     };
 
