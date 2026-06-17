@@ -71,6 +71,59 @@ describe('parseApiError', () => {
     expect(parsed.statusCode).toBe(503);
   });
 
+  it('parses DRF detail payload for 400', () => {
+    const error = {
+      isAxiosError: true,
+      response: {
+        status: 400,
+        data: {
+          detail: 'Неверные учётные данные',
+        },
+      },
+      message: 'Bad Request',
+    };
+
+    const parsed = parseApiError(error);
+    expect(parsed).toBeInstanceOf(ApiException);
+    expect(parsed.statusCode).toBe(400);
+    expect(parsed.message).toBe('Неверные учётные данные');
+  });
+
+  it('sets unauthorized state for 401', () => {
+    const error = {
+      isAxiosError: true,
+      response: {
+        status: 401,
+      },
+      message: 'Unauthorized',
+    };
+
+    const parsed = parseApiError(error);
+    expect(parsed).toBeInstanceOf(ApiException);
+    expect(parsed.statusCode).toBe(401);
+    expect(parsed.isUnauthorized).toBe(true);
+    expect(parsed.code).toBe('UNAUTHENTICATED');
+  });
+
+  it('returns friendly message for explicit 500', () => {
+    const error = {
+      isAxiosError: true,
+      response: {
+        status: 500,
+        data: {
+          detail: 'Internal Server Error',
+        },
+      },
+      message: 'Internal Server Error',
+    };
+
+    const parsed = parseApiError(error);
+    expect(parsed).toBeInstanceOf(ApiException);
+    expect(parsed.statusCode).toBe(500);
+    expect(parsed.code).toBe('SERVER_ERROR');
+    expect(parsed.message).toBe('Сервис временно недоступен');
+  });
+
   it('falls back for network errors', () => {
     const parsed = parseApiError(new axios.AxiosError('Network Error'));
     expect(parsed.message).toBe('Network Error');
