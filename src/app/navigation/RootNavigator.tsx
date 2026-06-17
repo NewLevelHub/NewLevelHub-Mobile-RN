@@ -14,6 +14,7 @@ import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
+import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -68,6 +69,11 @@ export function RootNavigator() {
               name={Routes.EmailVerifyDeepLink}
               component={EmailVerifyDeepLinkScreen}
               options={{ title: 'Подтверждение email' }}
+            />
+            <Stack.Screen
+              name={Routes.UiKit}
+              component={UiKitDemoScreen}
+              options={{ title: 'UI Kit' }}
             />
           </>
         ) : (

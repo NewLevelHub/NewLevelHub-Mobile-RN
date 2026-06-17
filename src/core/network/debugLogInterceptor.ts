@@ -62,6 +62,9 @@ export function attachDebugLogInterceptor(
       const path = response.config.url ?? '';
       const method = response.config.method ?? 'GET';
       logResponse(log, method, path, response.status);
+      if (!isSensitivePath(path) && response.data !== undefined) {
+        log(`[API]    ${JSON.stringify(response.data)}`);
+      }
       return response;
     },
     (error: AxiosError) => {
