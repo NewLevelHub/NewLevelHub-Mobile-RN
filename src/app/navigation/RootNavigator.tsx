@@ -8,6 +8,7 @@ import { useAuthStore } from '@/core/auth/authStore';
 import { SplashScreen } from '@/features/auth/screens/SplashScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
 import { AuthPlaceholderScreen } from '@/features/auth/screens/AuthPlaceholderScreen';
+import { InviteRegisterScreen } from '@/features/auth/screens/InviteRegisterScreen';
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDeepLinkScreen';
 import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
@@ -22,6 +23,10 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       [Routes.EmailVerifyDeepLink]: {
         path: 'verify-email',
+        parse: { token: (token: string) => token },
+      },
+      [Routes.Invite]: {
+        path: 'invite',
         parse: { token: (token: string) => token },
       },
     },
@@ -84,7 +89,7 @@ export function RootNavigator() {
             />
             <Stack.Screen
               name={Routes.Invite}
-              component={AuthPlaceholderScreen}
+              component={InviteRegisterScreen}
               options={{ title: 'Регистрация по приглашению' }}
             />
             <Stack.Screen

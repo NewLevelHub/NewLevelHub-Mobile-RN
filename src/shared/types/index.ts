@@ -24,6 +24,13 @@ export interface User {
   last_login?: string | null;
 }
 
+export interface InviteInfo {
+  company_name: string | null;
+  email: string;
+  role: string;
+  is_guest_upgrade: boolean;
+}
+
 export interface AuthTokens {
   access: string;
   refresh: string;
