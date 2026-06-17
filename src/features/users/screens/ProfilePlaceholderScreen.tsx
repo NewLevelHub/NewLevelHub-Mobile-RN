@@ -1,10 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
+import { AppButton } from '@/shared/ui/AppButton';
 
 export function ProfilePlaceholderScreen() {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Выйти',
+      'Вы уверены, что хотите выйти из аккаунта?',
+      [
+        { text: 'Отмена', style: 'cancel' },
+        { text: 'Выйти', style: 'destructive', onPress: () => void logout() },
+      ],
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -17,6 +30,7 @@ export function ProfilePlaceholderScreen() {
           <Text style={styles.meta}>Роль: {user.role}</Text>
         </View>
       ) : null}
+      <AppButton onPress={handleLogout} title="Выйти" variant="text" />
     </View>
   );
 }
