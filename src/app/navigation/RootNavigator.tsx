@@ -8,6 +8,7 @@ import { useAuthStore } from '@/core/auth/authStore';
 import { SplashScreen } from '@/features/auth/screens/SplashScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
 import { AuthPlaceholderScreen } from '@/features/auth/screens/AuthPlaceholderScreen';
+import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDeepLinkScreen';
 import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
@@ -68,7 +69,7 @@ export function RootNavigator() {
             />
             <Stack.Screen
               name={Routes.Register}
-              component={AuthPlaceholderScreen}
+              component={RegisterScreen}
               options={{ title: 'Регистрация' }}
             />
             <Stack.Screen
