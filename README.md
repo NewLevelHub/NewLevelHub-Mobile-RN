@@ -2,6 +2,14 @@
 
 Expo + TypeScript mobile client for the NewLevelHub coworking platform.
 
+## Requirements
+
+- Node.js 20 or 22 LTS
+- npm (bundled with Node.js)
+- iOS Simulator (Xcode) or Android Emulator for local runs via Expo Go
+
+API requests go to staging or production — local Django is not used.
+
 ## Stack
 
 - Expo SDK 56
@@ -22,7 +30,24 @@ npm test
 
 ## Environment
 
-Copy `.env.example` to `.env` and adjust `EXPO_PUBLIC_*` variables if needed.
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+### `EXPO_PUBLIC_API_BASE_URL`
+
+Base URL for the Django REST API (must include `/api/v1`).
+
+| Environment | Example |
+|-------------|---------|
+| Production | `https://production.newlevelhub.kz/api/v1` |
+| Staging | use your staging API URL |
+
+Default in `.env.example` points to production. Change it before `npm run start` if you need another backend.
+
+Other optional variables: `EXPO_PUBLIC_MEDIA_BASE_URL`, `EXPO_PUBLIC_APP_NAME`.
 
 ## Structure
 
