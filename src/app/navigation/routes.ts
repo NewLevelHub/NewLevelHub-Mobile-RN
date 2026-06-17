@@ -3,6 +3,7 @@ export const Routes = {
   Login: 'Login',
   Register: 'Register',
   VerifyEmail: 'VerifyEmail',
+  EmailVerifyDeepLink: 'EmailVerifyDeepLink',
   Invite: 'Invite',
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   [Routes.Login]: undefined;
   [Routes.Register]: { title?: string; subtitle?: string } | undefined;
   [Routes.VerifyEmail]: { email?: string; title?: string; subtitle?: string };
+  [Routes.EmailVerifyDeepLink]: { token?: string };
   [Routes.Invite]: { token?: string; title?: string; subtitle?: string };
   [Routes.ForgotPassword]: { title?: string; subtitle?: string } | undefined;
   [Routes.ResetPassword]: { token?: string; title?: string; subtitle?: string };
