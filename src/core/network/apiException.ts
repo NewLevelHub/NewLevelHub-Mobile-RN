@@ -26,6 +26,17 @@ export class ApiException extends Error {
   }
 }
 
+export class InvalidCredentialsException extends ApiException {
+  constructor() {
+    super({
+      code: 'INVALID_CREDENTIALS',
+      message: 'Неверные учётные данные',
+      statusCode: 400,
+    });
+    this.name = 'InvalidCredentialsException';
+  }
+}
+
 export class EmailNotVerifiedException extends ApiException {
   static readonly emailNotVerifiedCode = 'EMAIL_NOT_VERIFIED';
 

@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { validateSession } from '@/core/auth/authApi';
 import { setSessionExpiredHandler } from '@/core/network/apiClient';
 import { parseApiError } from '@/core/network/errorParser';
-import { EmailNotVerifiedException } from '@/core/network/apiException';
+import { EmailNotVerifiedException, InvalidCredentialsException } from '@/core/network/apiException';
 import { apiClient } from '@/core/network/apiClient';
 import { tokenStorage } from '@/core/auth/tokenStorage';
 import { mapApiUser } from '@/shared/lib/mapUser';
@@ -47,7 +47,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthenticated: true,
       });
     } catch (error) {
-      throw parseApiError(error);
+      const parsed = parseApiError(error);
+      if (parsed.statusCode === 400) throw new InvalidCredentialsException();
+      throw parsed;
     }
   },
 
@@ -101,4 +103,4 @@ setSessionExpiredHandler(() => {
   void useAuthStore.getState().logoutLocal();
 });
 
-export { EmailNotVerifiedException };
+export { EmailNotVerifiedException, InvalidCredentialsException };
