@@ -1,0 +1,15 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://production.newlevelhub.kz/api/v1",
+        "EXPO_PUBLIC_MEDIA_BASE_URL": "https://production.newlevelhub.kz",
+        "EXPO_PUBLIC_APP_NAME": "NewLevelHub"
+      }
+    }
+  }
+}

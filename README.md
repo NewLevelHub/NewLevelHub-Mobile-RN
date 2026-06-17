@@ -8,7 +8,7 @@ Expo + TypeScript mobile client for the NewLevelHub coworking platform.
 - npm (bundled with Node.js)
 - iOS Simulator (Xcode) or Android Emulator for local runs via Expo Go
 
-API requests go to staging or production — local Django is not used.
+API requests go to the production backend only — local Django is not used.
 
 ## Stack
 
@@ -30,24 +30,23 @@ npm test
 
 ## Environment
 
-Copy `.env.example` to `.env`:
+All builds (local dev and EAS) use the production API.
+
+Copy `.env.example` to `.env` for local development:
 
 ```bash
 cp .env.example .env
 ```
 
-### `EXPO_PUBLIC_API_BASE_URL`
+| Variable | Value |
+|----------|-------|
+| `EXPO_PUBLIC_API_BASE_URL` | `https://production.newlevelhub.kz/api/v1` |
+| `EXPO_PUBLIC_MEDIA_BASE_URL` | `https://production.newlevelhub.kz` |
+| `EXPO_PUBLIC_APP_NAME` | `NewLevelHub` |
 
-Base URL for the Django REST API (must include `/api/v1`).
+EAS production builds read the same values from `eas.json` (`build.production.env`). See `.env.production` for the reference template.
 
-| Environment | Example |
-|-------------|---------|
-| Production | `https://production.newlevelhub.kz/api/v1` |
-| Staging | use your staging API URL |
-
-Default in `.env.example` points to production. Change it before `npm run start` if you need another backend.
-
-Other optional variables: `EXPO_PUBLIC_MEDIA_BASE_URL`, `EXPO_PUBLIC_APP_NAME`.
+Config is centralized in `src/core/config/env.ts` and `src/core/config/apiConfig.ts` — do not hardcode API URLs in feature modules.
 
 ## Structure
 
