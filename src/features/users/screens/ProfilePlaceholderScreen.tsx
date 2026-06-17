@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthStore } from '@/core/auth/authStore';
@@ -7,6 +8,7 @@ import { AppButton } from '@/shared/ui/AppButton';
 export function ProfilePlaceholderScreen() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = () => {
     Alert.alert(
@@ -14,7 +16,14 @@ export function ProfilePlaceholderScreen() {
       'Вы уверены, что хотите выйти из аккаунта?',
       [
         { text: 'Отмена', style: 'cancel' },
-        { text: 'Выйти', style: 'destructive', onPress: () => void logout() },
+        {
+          text: 'Выйти',
+          style: 'destructive',
+          onPress: async () => {
+            setIsLoggingOut(true);
+            await logout();
+          },
+        },
       ],
     );
   };
@@ -30,7 +39,12 @@ export function ProfilePlaceholderScreen() {
           <Text style={styles.meta}>Роль: {user.role}</Text>
         </View>
       ) : null}
-      <AppButton onPress={handleLogout} title="Выйти" variant="text" />
+      <AppButton
+        onPress={handleLogout}
+        title={isLoggingOut ? 'Выход...' : 'Выйти'}
+        variant="text"
+        disabled={isLoggingOut}
+      />
     </View>
   );
 }
