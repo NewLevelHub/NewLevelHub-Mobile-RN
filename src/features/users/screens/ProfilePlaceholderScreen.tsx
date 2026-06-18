@@ -75,6 +75,11 @@ export function ProfilePlaceholderScreen() {
         variant="secondary"
       />
       <AppButton
+        onPress={() => navigation.navigate(Routes.ChangePassword)}
+        title="Сменить пароль"
+        variant="secondary"
+      />
+      <AppButton
         onPress={handleLogout}
         title={isLoggingOut ? 'Выход...' : 'Выйти'}
         variant="text"

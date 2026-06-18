@@ -15,9 +15,9 @@ import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScre
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
-import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
 import { ProfileEditScreen } from '@/features/users/screens/ProfileEditScreen';
+import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -71,6 +71,11 @@ export function RootNavigator() {
               name={Routes.ProfileEdit}
               component={ProfileEditScreen}
               options={{ title: 'Редактировать профиль' }}
+            />
+            <Stack.Screen
+              name={Routes.ChangePassword}
+              component={ChangePasswordScreen}
+              options={{ title: 'Смена пароля' }}
             />
             <Stack.Screen
               name={Routes.EmailVerifyDeepLink}
