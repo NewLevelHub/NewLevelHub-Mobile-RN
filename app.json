@@ -10,7 +10,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "kz.newlevelhub.newlevelhub-mobile",
-      "associatedDomains": ["applinks:newlevelhub.kz"]
+      "associatedDomains": [
+        "applinks:newlevelhub.kz"
+      ]
     },
     "android": {
       "package": "kz.newlevelhub.newlevelhub_mobile",
@@ -32,7 +34,10 @@
               "pathPrefix": "/verify-email"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         },
         {
           "action": "VIEW",
@@ -44,7 +49,10 @@
               "pathPrefix": "/invite"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -53,7 +61,8 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      "expo-image"
     ]
   }
 }
