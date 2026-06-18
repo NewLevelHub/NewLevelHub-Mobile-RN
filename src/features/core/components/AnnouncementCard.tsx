@@ -5,10 +5,17 @@ import { colors } from '@/core/theme/colors';
 import type { AnnouncementFeedItem } from '@/features/core/types/dashboard';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  news: colors.info,
-  event: colors.brand,
-  alert: colors.error,
+  news:        colors.info,
+  event:       colors.brand,
+  alert:       colors.error,
   maintenance: colors.warning,
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  news:        'Новость',
+  event:       'Событие',
+  alert:       'Важно',
+  maintenance: 'Тех. работы',
 };
 
 function relativeDate(iso: string): string {
@@ -40,7 +47,9 @@ function AnnouncementCardComponent({ item, onPress }: Props) {
     >
       <View style={styles.header}>
         <View style={[styles.chip, { backgroundColor: chipColor + '1A' }]}>
-          <Text style={[styles.chipText, { color: chipColor }]}>{item.category}</Text>
+          <Text style={[styles.chipText, { color: chipColor }]}>
+            {CATEGORY_LABELS[item.category] ?? item.category}
+          </Text>
         </View>
         <Text style={styles.date}>{relativeDate(item.created_at)}</Text>
       </View>

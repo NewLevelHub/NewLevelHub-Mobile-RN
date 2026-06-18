@@ -30,6 +30,7 @@ interface LeaveProps {
   item: PendingLeave;
   onApprove?: () => void;
   onReject?: () => void;
+  disabled?: boolean;
 }
 
 // ─── Guest pass variant ───────────────────────────────────────────────────────
@@ -39,12 +40,13 @@ interface GuestPassProps {
   item: GuestPass;
   onApprove?: () => void;
   onReject?: () => void;
+  disabled?: boolean;
 }
 
 type Props = LeaveProps | GuestPassProps;
 
 function PendingApprovalCardComponent(props: Props) {
-  const { kind, onApprove, onReject } = props;
+  const { kind, onApprove, onReject, disabled } = props;
 
   if (kind === 'leave') {
     const { item } = props;
@@ -69,7 +71,7 @@ function PendingApprovalCardComponent(props: Props) {
             <Text style={[styles.chipText, { color: colors.warning }]}>Отпуск</Text>
           </View>
         </View>
-        <Actions onApprove={onApprove} onReject={onReject} />
+        <Actions onApprove={onApprove} onReject={onReject} disabled={disabled} />
       </View>
     );
   }
@@ -100,7 +102,7 @@ function PendingApprovalCardComponent(props: Props) {
           <Text style={[styles.chipText, { color: colors.brandText }]}>Пропуск</Text>
         </View>
       </View>
-      <Actions onApprove={onApprove} onReject={onReject} />
+      <Actions onApprove={onApprove} onReject={onReject} disabled={disabled} />
     </View>
   );
 }
@@ -108,16 +110,18 @@ function PendingApprovalCardComponent(props: Props) {
 function Actions({
   onApprove,
   onReject,
+  disabled,
 }: {
   onApprove?: () => void;
   onReject?: () => void;
+  disabled?: boolean;
 }) {
   if (!onApprove && !onReject) return null;
   return (
-    <View style={styles.actions}>
+    <View style={[styles.actions, disabled && styles.actionsDisabled]}>
       {onReject && (
         <Pressable
-          style={({ pressed }) => [styles.actionBtn, styles.rejectBtn, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.actionBtn, styles.rejectBtn, pressed && !disabled && styles.pressed]}
           onPress={onReject}
         >
           <Text style={styles.rejectText}>Отклонить</Text>
@@ -125,7 +129,7 @@ function Actions({
       )}
       {onApprove && (
         <Pressable
-          style={({ pressed }) => [styles.actionBtn, styles.approveBtn, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.actionBtn, styles.approveBtn, pressed && !disabled && styles.pressed]}
           onPress={onApprove}
         >
           <Text style={styles.approveText}>Одобрить</Text>
@@ -206,6 +210,9 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     gap: 8,
+  },
+  actionsDisabled: {
+    opacity: 0.45,
   },
   actionBtn: {
     flex: 1,
