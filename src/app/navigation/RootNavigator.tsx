@@ -15,6 +15,7 @@ import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScre
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
+import { UsersListScreen } from '@/features/admin/screens/UsersListScreen';
 import { ProfileScreen } from '@/features/users/screens/ProfileScreen';
 import { ProfileEditScreen } from '@/features/users/screens/ProfileEditScreen';
 import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScreen';
@@ -91,6 +92,11 @@ export function RootNavigator() {
               name={Routes.UiKit}
               component={UiKitDemoScreen}
               options={{ title: 'UI Kit' }}
+            />
+            <Stack.Screen
+              name={Routes.AdminUsers}
+              component={UsersListScreen}
+              options={{ title: 'Пользователи' }}
             />
           </>
         ) : (
