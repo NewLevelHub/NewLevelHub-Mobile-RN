@@ -8,6 +8,8 @@ import { tokenStorage } from '@/core/auth/tokenStorage';
 import { runConnectivityPreFlight } from '@/core/bootstrap/appBootstrap';
 import { mapApiUser } from '@/shared/lib/mapUser';
 import { API } from '@/shared/api/endpoints';
+import { queryClient } from '@/core/query/queryClient';
+import { DASHBOARD_QUERY_KEY } from '@/features/core/hooks/useDashboard';
 import type { User } from '@/shared/types';
 
 export type BootstrapStatus = 'idle' | 'checking' | 'ok' | 'health_unavailable' | 'ping_failed';
@@ -51,6 +53,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const { data } = await apiClient.post(API.auth.register, payload);
       const tokens = data.tokens as { access: string; refresh: string };
       await tokenStorage.saveTokens(tokens.access, tokens.refresh);
+      void queryClient.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY });
       return mapApiUser(data.user as Record<string, unknown>);
     } catch (error) {
       throw parseApiError(error);
@@ -71,6 +74,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         user: mapApiUser(data.user as Record<string, unknown>),
         isAuthenticated: true,
       });
+      void queryClient.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY });
     } catch (error) {
       const parsed = parseApiError(error);
       if (parsed.statusCode === 400) throw new InvalidCredentialsException();
@@ -92,6 +96,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logoutLocal: async () => {
     await tokenStorage.clearTokens();
     set({ user: null, isAuthenticated: false });
+    queryClient.clear();
   },
 
   fetchMe: async () => {
