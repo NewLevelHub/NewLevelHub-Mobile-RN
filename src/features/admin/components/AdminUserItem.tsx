@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
@@ -25,6 +25,7 @@ const ROLE_COLORS: Record<string, string> = {
 
 interface Props {
   user: User;
+  onPress?: () => void;
 }
 
 function getInitials(user: User): string {
@@ -33,13 +34,16 @@ function getInitials(user: User): string {
   return (first + last).toUpperCase() || user.email[0].toUpperCase();
 }
 
-function AdminUserItemComponent({ user }: Props) {
+function AdminUserItemComponent({ user, onPress }: Props) {
   const roleLabel = ROLE_LABELS[user.role] ?? user.role;
   const roleBadgeColor = ROLE_COLORS[user.role] ?? colors.textMuted;
   const initials = getInitials(user);
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      onPress={onPress}
+    >
       <View style={styles.avatar}>
         {user.avatar ? (
           <Text style={styles.avatarText}>{initials}</Text>
@@ -68,7 +72,7 @@ function AdminUserItemComponent({ user }: Props) {
         </View>
         <View style={[styles.statusDot, user.is_email_verified ? styles.dotActive : styles.dotInactive]} />
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -144,5 +148,8 @@ const styles = StyleSheet.create({
   },
   dotInactive: {
     backgroundColor: colors.textSubtle,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

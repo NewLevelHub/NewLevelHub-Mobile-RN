@@ -25,10 +25,17 @@ export interface User {
     plan?: string | null;
   } | null;
   avatar: string | null;
+  is_active?: boolean;
   is_email_verified: boolean;
   position: string | null;
   date_joined?: string;
   last_login?: string | null;
+}
+
+export interface AdminUserDetail extends User {
+  is_active: boolean;
+  bookings_count: number;
+  tasks_count: number;
 }
 
 export interface ActivityItem {
