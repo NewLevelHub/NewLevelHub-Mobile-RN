@@ -5,9 +5,12 @@ import { parseApiError } from '@/core/network/errorParser';
 import { ApiException, EmailNotVerifiedException, InvalidCredentialsException } from '@/core/network/apiException';
 import { apiClient } from '@/core/network/apiClient';
 import { tokenStorage } from '@/core/auth/tokenStorage';
+import { runConnectivityPreFlight } from '@/core/bootstrap/appBootstrap';
 import { mapApiUser } from '@/shared/lib/mapUser';
 import { API } from '@/shared/api/endpoints';
 import type { User } from '@/shared/types';
+
+export type BootstrapStatus = 'idle' | 'checking' | 'ok' | 'health_unavailable' | 'ping_failed';
 
 interface RegisterPayload {
   email: string;
@@ -22,6 +25,7 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  bootstrapStatus: BootstrapStatus;
 
   bootstrap: () => Promise<void>;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
@@ -36,6 +40,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoading: true,
   isAuthenticated: false,
+  bootstrapStatus: 'idle',
 
   setAuthenticatedUser: (user) => {
     set({ user, isAuthenticated: true });
@@ -98,12 +103,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   bootstrap: async () => {
-    set({ isLoading: true });
+    set({ isLoading: true, bootstrapStatus: 'checking' });
 
+    // --- Pre-flight connectivity check ---
+    const connectivityStatus = await runConnectivityPreFlight();
+    if (connectivityStatus !== 'ok') {
+      set({ isLoading: false, bootstrapStatus: connectivityStatus });
+      return;
+    }
+
+    // --- Connectivity confirmed — proceed with auth ---
     try {
       const hasTokens = await tokenStorage.hasTokens();
       if (!hasTokens) {
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, isAuthenticated: false, bootstrapStatus: 'ok' });
         return;
       }
 
@@ -111,6 +124,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // refreshes it and retries automatically. If refresh also fails,
       // handleSessionExpired fires logoutLocal via setSessionExpiredHandler.
       await get().fetchMe();
+      set({ bootstrapStatus: 'ok' });
     } catch (error) {
       const apiError = error instanceof ApiException ? error : parseApiError(error);
       if (apiError.statusCode === 401 || apiError.statusCode === 403) {
@@ -120,6 +134,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Network error / 5xx: tokens may still be valid, keep isAuthenticated
       // as false (initial state) so the user sees the login screen but tokens
       // are preserved for the next attempt.
+      set({ bootstrapStatus: 'ok' });
     } finally {
       set({ isLoading: false });
     }

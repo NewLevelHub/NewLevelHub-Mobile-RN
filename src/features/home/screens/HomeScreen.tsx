@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 import { useAuthStore } from '@/core/auth/authStore';
-import { ConnectivityProbe } from '@/core/network/connectivityProbe';
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
 import { AppButton } from '@/shared/ui/AppButton';
-import { AppLoader } from '@/shared/ui/AppLoader';
 import { useActivityFeed } from '@/features/users/hooks/useActivityFeed';
 import { ActivityFeed } from '@/features/users/components/ActivityFeed';
 
@@ -39,40 +37,6 @@ export function HomeScreen({ navigation }: Props) {
     setIsRefreshing(false);
   }, [refetchActivity]);
 
-  const [pingStatus, setPingStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
-  const [pingMessage, setPingMessage] = useState<string>();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const probe = async () => {
-      setPingStatus('loading');
-      const result = await new ConnectivityProbe().run();
-      if (cancelled) return;
-
-      switch (result.kind) {
-        case 'ok':
-          setPingStatus('ok');
-          setPingMessage(`API OK · ping 200 · health ${result.health.status}`);
-          break;
-        case 'health_unavailable':
-          setPingStatus('error');
-          setPingMessage('Сервис временно недоступен. Попробуйте позже.');
-          break;
-        case 'ping_failed':
-          setPingStatus('error');
-          setPingMessage('Не удалось проверить API');
-          break;
-      }
-    };
-
-    void probe();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
     <ScrollView
       style={styles.scroll}
@@ -87,12 +51,6 @@ export function HomeScreen({ navigation }: Props) {
     >
       <Text style={styles.title}>Добро пожаловать{user ? `, ${user.full_name}` : ''}</Text>
       <Text style={styles.subtitle}>Главный экран в разработке</Text>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Проверка API</Text>
-        {pingStatus === 'loading' ? <AppLoader size="small" /> : null}
-        {pingMessage ? <Text style={styles.cardText}>{pingMessage}</Text> : null}
-      </View>
 
       <View style={styles.activitySection}>
         <Text style={styles.sectionTitle}>Моя активность</Text>
@@ -126,24 +84,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
-    color: colors.textSecondary,
-  },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 16,
-    gap: 8,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontFamily: 'Inter_600SemiBold',
-    color: colors.textPrimary,
-  },
-  cardText: {
-    fontSize: 14,
     fontFamily: 'Inter_400Regular',
     color: colors.textSecondary,
   },
