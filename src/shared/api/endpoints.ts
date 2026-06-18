@@ -27,5 +27,7 @@ export const API = {
   core: {
     ping: '/ping/',
     health: '/health/',
+    dashboard: '/dashboard/',
+    calendarEvents: '/calendar/events/',
   },
 } as const;
