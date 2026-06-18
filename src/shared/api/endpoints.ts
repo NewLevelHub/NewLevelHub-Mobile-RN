@@ -17,6 +17,9 @@ export const API = {
   },
   admin: {
     users: '/auth/users/',
+    userDetail: (id: number) => `/auth/users/${id}/`,
+    userBlock: (id: number) => `/auth/users/${id}/block/`,
+    userUnblock: (id: number) => `/auth/users/${id}/unblock/`,
   },
   activity: {
     feed: '/auth/me/activity/',
