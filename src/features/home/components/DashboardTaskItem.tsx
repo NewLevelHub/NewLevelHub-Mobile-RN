@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { PRIORITY_LABELS } from '@/shared/lib/labels';
 import type { DashboardTask } from '@/features/core/types/dashboard';
 
 interface Props {
@@ -12,14 +13,13 @@ interface Props {
 interface PriorityStyle {
   bg: string;
   text: string;
-  label: string;
 }
 
 const PRIORITY_STYLES: Record<string, PriorityStyle> = {
-  low:    { bg: colors.raised,             text: colors.textMuted, label: 'Низкий' },
-  medium: { bg: colors.brandSubtle,        text: colors.brandText, label: 'Средний' },
-  high:   { bg: colors.warningBackground,  text: colors.warning,   label: 'Высокий' },
-  urgent: { bg: colors.errorBackground,    text: colors.error,     label: 'Срочный' },
+  low:    { bg: colors.raised,             text: colors.textMuted },
+  medium: { bg: colors.brandSubtle,        text: colors.brandText },
+  high:   { bg: colors.warningBackground,  text: colors.warning   },
+  urgent: { bg: colors.errorBackground,    text: colors.error     },
 };
 
 function formatDate(dateStr: string): string {
@@ -28,6 +28,7 @@ function formatDate(dateStr: string): string {
 
 export const DashboardTaskItem = React.memo(function DashboardTaskItem({ item, onPress }: Props) {
   const priority = PRIORITY_STYLES[item.priority] ?? PRIORITY_STYLES.low;
+  const priorityLabel = PRIORITY_LABELS[item.priority] ?? item.priority;
   const dueDateStr = item.due_date ? formatDate(item.due_date) : '';
   const metaParts = [item.board_name, dueDateStr, item.is_overdue ? 'Просрочено' : ''].filter(Boolean);
 
@@ -44,7 +45,7 @@ export const DashboardTaskItem = React.memo(function DashboardTaskItem({ item, o
         </Text>
       </View>
       <View style={[styles.badge, { backgroundColor: priority.bg }]}>
-        <Text style={[styles.badgeText, { color: priority.text }]}>{priority.label}</Text>
+        <Text style={[styles.badgeText, { color: priority.text }]}>{priorityLabel}</Text>
       </View>
     </TouchableOpacity>
   );

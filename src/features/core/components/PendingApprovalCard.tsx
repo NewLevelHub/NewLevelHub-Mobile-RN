@@ -2,14 +2,8 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { LEAVE_TYPE_LABELS } from '@/shared/lib/labels';
 import type { GuestPass, PendingLeave } from '@/features/core/types/dashboard';
-
-const LEAVE_TYPE_LABELS: Record<string, string> = {
-  vacation: 'Отпуск',
-  day_off: 'Отгул',
-  sick_leave: 'Больничный',
-  remote: 'Удалённая работа',
-};
 
 function formatDate(iso: string): string {
   return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(

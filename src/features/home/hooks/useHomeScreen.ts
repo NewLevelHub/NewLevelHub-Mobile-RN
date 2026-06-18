@@ -2,7 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { useAuthStore } from '@/core/auth/authStore';
 import { useDashboard } from '@/features/core/hooks/useDashboard';
-import type { CompanyAdminDashboard, EmployeeDashboard } from '@/features/core/types/dashboard';
+import type {
+  CompanyAdminDashboard,
+  EmployeeDashboard,
+  SuperadminDashboard,
+} from '@/features/core/types/dashboard';
 
 export function useHomeScreen() {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -16,6 +20,9 @@ export function useHomeScreen() {
     error: dashboardError,
     refetch: refetchDashboard,
   } = useDashboard();
+
+  const superadminData: SuperadminDashboard | null =
+    dashboard?.role === 'superadmin' ? (dashboard as SuperadminDashboard) : null;
 
   const employeeData: EmployeeDashboard | null =
     dashboard?.role === 'employee' ? (dashboard as EmployeeDashboard) : null;
@@ -36,6 +43,7 @@ export function useHomeScreen() {
     dashboardLoading,
     dashboardError,
     refetchDashboard,
+    superadminData,
     employeeData,
     companyAdminData,
     isRefreshing,

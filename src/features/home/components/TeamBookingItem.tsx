@@ -6,6 +6,7 @@ import type { TeamBookingToday } from '@/features/core/types/dashboard';
 
 const STATUS_MAP: Record<string, { label: string; style: 'confirmed' | 'warning' | 'error' | 'default' }> = {
   confirmed:  { label: 'Подтв.',     style: 'confirmed' },
+  completed:  { label: 'Завершено',  style: 'confirmed' },
   pending:    { label: 'Ожидание',   style: 'warning' },
   cancelled:  { label: 'Отменено',   style: 'error' },
   no_show:    { label: 'Не пришёл',  style: 'error' },

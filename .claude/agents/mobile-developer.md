@@ -65,6 +65,7 @@ src/
       constants.ts                 # USER_ROLES, UserRole type
     lib/
       mapUser.ts                   # API response → User interface
+      labels.ts                    # Shared enum label maps (booking status, priority, leave type, resource type, announcement category)
     types/
       index.ts                     # User, AuthTokens, LoginResponse
     ui/
@@ -89,6 +90,7 @@ src/
 9. **Environment:** Always use `env` from `@/core/config/env` — never access `process.env.EXPO_PUBLIC_*` directly in screens/components
 10. **Styles:** Always use `StyleSheet.create()` — never inline style objects (except for truly one-off dynamic values)
 11. **Roles:** Use `USER_ROLES` constants for all role comparisons — never raw strings
+12. **Enum labels:** Always use maps from `@/shared/lib/labels` for displaying backend enum values (booking status, priority, leave type, resource type, announcement category) — never hardcode translation strings inside components
 
 ---
 

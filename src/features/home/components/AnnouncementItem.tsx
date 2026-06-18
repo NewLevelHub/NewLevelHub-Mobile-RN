@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { ANNOUNCEMENT_CATEGORY_LABELS } from '@/shared/lib/labels';
 import type { AnnouncementFeedItem } from '@/features/core/types/dashboard';
 
 interface Props {
@@ -11,25 +12,25 @@ interface Props {
 interface CategoryStyle {
   bg: string;
   text: string;
-  label: string;
 }
 
 const CATEGORY_STYLES: Record<string, CategoryStyle> = {
-  info:    { bg: colors.raised,            text: colors.textMuted, label: 'Инфо' },
-  event:   { bg: colors.brandSubtle,       text: colors.brandText, label: 'Событие' },
-  warning: { bg: colors.warningBackground, text: colors.warning,   label: 'Важно' },
-  urgent:  { bg: colors.errorBackground,   text: colors.error,     label: 'Срочно' },
+  info:    { bg: colors.raised,            text: colors.textMuted },
+  event:   { bg: colors.brandSubtle,       text: colors.brandText },
+  warning: { bg: colors.warningBackground, text: colors.warning   },
+  urgent:  { bg: colors.errorBackground,   text: colors.error     },
 };
 
 export const AnnouncementItem = React.memo(function AnnouncementItem({ item }: Props) {
   const style = CATEGORY_STYLES[item.category] ?? CATEGORY_STYLES.info;
+  const categoryLabel = ANNOUNCEMENT_CATEGORY_LABELS[item.category] ?? item.category;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
         <View style={[styles.badge, { backgroundColor: style.bg }]}>
-          <Text style={[styles.badgeText, { color: style.text }]}>{style.label}</Text>
+          <Text style={[styles.badgeText, { color: style.text }]}>{categoryLabel}</Text>
         </View>
       </View>
       {item.body ? (
