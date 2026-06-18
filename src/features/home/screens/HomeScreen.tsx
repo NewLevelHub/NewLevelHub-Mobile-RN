@@ -1,27 +1,38 @@
-import { useCallback, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
-import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppErrorView } from '@/shared/ui/AppErrorView';
-import { AppLoader } from '@/shared/ui/AppLoader';
-import { useActivityFeed } from '@/features/users/hooks/useActivityFeed';
-import { ActivityFeed } from '@/features/users/components/ActivityFeed';
-import { useDashboard } from '@/features/core/hooks/useDashboard';
 import type {
+  DashboardResponse,
+  EmployeeDashboard,
   SuperadminDashboard,
   CompanyAdminDashboard,
-  EmployeeDashboard,
   GuestDashboard,
 } from '@/features/core/types/dashboard';
 
+import { useHomeScreen } from '@/features/home/hooks/useHomeScreen';
+import { HomeSkeleton } from '@/features/home/components/HomeSkeleton';
+import { DashboardHeader } from '@/features/home/components/DashboardHeader';
+import { UpcomingBookingItem } from '@/features/home/components/UpcomingBookingItem';
+import { DashboardTaskItem } from '@/features/home/components/DashboardTaskItem';
+import { AnnouncementItem } from '@/features/home/components/AnnouncementItem';
+
 type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
 
-// ─── Stat card ────────────────────────────────────────────────────────────────
+// ─── Shared sub-components ────────────────────────────────────────────────────
+
+function HomeSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.sectionItems}>{children}</View>
+    </View>
+  );
+}
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -32,98 +43,108 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-// ─── Role widgets ─────────────────────────────────────────────────────────────
+// ─── Employee layout ──────────────────────────────────────────────────────────
 
-function SuperadminWidget({ data }: { data: SuperadminDashboard }) {
-  return (
-    <View style={styles.statsRow}>
-      <StatCard label="Компании" value={data.total_companies} />
-      <StatCard label="Пользователи" value={data.total_users} />
-      <StatCard label="Брони сегодня" value={data.bookings_today} />
-    </View>
-  );
-}
-
-function CompanyAdminWidget({ data }: { data: CompanyAdminDashboard }) {
-  return (
-    <View style={styles.statsRow}>
-      <StatCard label="Сотрудники" value={data.employee_count} />
-      <StatCard label="Активные задачи" value={data.active_tasks} />
-      <StatCard label="Брони сегодня" value={data.bookings_today} />
-    </View>
-  );
-}
-
-function EmployeeWidget({ data }: { data: EmployeeDashboard }) {
-  return (
-    <View style={styles.statsRow}>
-      <StatCard label="Задач сегодня" value={data.my_tasks_today} />
-      <StatCard label="Мои брони" value={data.my_bookings_today} />
-      <StatCard label="Уведомления" value={data.unread_notifications_count} />
-    </View>
-  );
-}
-
-function GuestWidget({ data }: { data: GuestDashboard }) {
-  return (
-    <View style={styles.statsRow}>
-      <StatCard label="Мои брони" value={data.my_bookings_today} />
-      <StatCard label="Свободных столов" value={data.quick_booking.available_desks} />
-      <StatCard label="Свободных комнат" value={data.quick_booking.available_rooms} />
-    </View>
-  );
-}
-
-// ─── Dashboard section ────────────────────────────────────────────────────────
-
-function DashboardSection({
-  isLoading,
-  error,
+function EmployeeLayout({
   data,
-  onRetry,
+  onNotificationPress,
+  onBookingPress,
+  onTaskPress,
 }: {
-  isLoading: boolean;
-  error: ReturnType<typeof useDashboard>['error'];
-  data: ReturnType<typeof useDashboard>['data'];
-  onRetry: () => void;
+  data: EmployeeDashboard;
+  onNotificationPress: () => void;
+  onBookingPress: () => void;
+  onTaskPress: () => void;
 }) {
-  if (isLoading) {
-    return <AppLoader size="small" />;
-  }
-
-  if (error || !data) {
-    return (
-      <AppErrorView
-        message={error?.message ?? 'Не удалось загрузить данные'}
-        onRetry={onRetry}
+  return (
+    <>
+      <DashboardHeader
+        fullName={data.user.full_name}
+        unreadCount={data.unread_notifications_count}
+        onNotificationPress={onNotificationPress}
       />
-    );
-  }
 
-  switch (data.role) {
-    case 'superadmin':
-      return <SuperadminWidget data={data} />;
-    case 'company_admin':
-      return <CompanyAdminWidget data={data} />;
-    case 'employee':
-      return <EmployeeWidget data={data} />;
-    default:
-      return <GuestWidget data={data as GuestDashboard} />;
-  }
+      <View style={styles.kpiRow}>
+        <StatCard label="Задач сегодня" value={data.my_tasks_today} />
+        <StatCard label="Мои брони" value={data.my_bookings_today} />
+      </View>
+
+      {data.my_upcoming_bookings.length > 0 && (
+        <HomeSection title="Предстоящие бронирования">
+          {data.my_upcoming_bookings.map((b) => (
+            <UpcomingBookingItem key={b.id} item={b} onPress={onBookingPress} />
+          ))}
+        </HomeSection>
+      )}
+
+      {data.my_tasks.length > 0 && (
+        <HomeSection title="Мои задачи">
+          {data.my_tasks.map((t) => (
+            <DashboardTaskItem key={t.id} item={t} onPress={onTaskPress} />
+          ))}
+        </HomeSection>
+      )}
+
+      {data.announcement_feed.length > 0 && (
+        <HomeSection title="Объявления">
+          {data.announcement_feed.map((a) => (
+            <AnnouncementItem key={a.id} item={a} />
+          ))}
+        </HomeSection>
+      )}
+    </>
+  );
+}
+
+// ─── Generic role fallback ────────────────────────────────────────────────────
+
+function GenericDashboard({ dashboard }: { dashboard: DashboardResponse }) {
+  return (
+    <>
+      <Text style={styles.title}>Добро пожаловать, {dashboard.user.full_name}</Text>
+      <View style={styles.card}>
+        <View style={styles.statsRow}>
+          {dashboard.role === 'superadmin' && (
+            <>
+              <StatCard label="Компании" value={(dashboard as SuperadminDashboard).total_companies} />
+              <StatCard label="Пользователи" value={(dashboard as SuperadminDashboard).total_users} />
+              <StatCard label="Брони сегодня" value={(dashboard as SuperadminDashboard).bookings_today} />
+            </>
+          )}
+          {dashboard.role === 'company_admin' && (
+            <>
+              <StatCard label="Сотрудники" value={(dashboard as CompanyAdminDashboard).employee_count} />
+              <StatCard label="Активные задачи" value={(dashboard as CompanyAdminDashboard).active_tasks} />
+              <StatCard label="Брони сегодня" value={(dashboard as CompanyAdminDashboard).bookings_today} />
+            </>
+          )}
+          {(dashboard.role === 'guest' || dashboard.role === 'reception' || dashboard.role === 'service_manager') && (
+            <>
+              <StatCard label="Мои брони" value={(dashboard as GuestDashboard).my_bookings_today} />
+              <StatCard label="Свободных столов" value={(dashboard as GuestDashboard).quick_booking.available_desks} />
+              <StatCard label="Свободных комнат" value={(dashboard as GuestDashboard).quick_booking.available_rooms} />
+            </>
+          )}
+        </View>
+      </View>
+    </>
+  );
 }
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export function HomeScreen({ navigation }: Props) {
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const { data: activityData, isLoading: activityLoading, isError: activityError, refetch: refetchActivity } =
-    useActivityFeed();
-
-  const { data: dashboard, isLoading: dashboardLoading, error: dashboardError, refetch: refetchDashboard } =
-    useDashboard();
+  const {
+    user,
+    logout,
+    dashboard,
+    dashboardLoading,
+    dashboardError,
+    refetchDashboard,
+    employeeData,
+    isRefreshing,
+    handleRefresh,
+  } = useHomeScreen();
 
   const handleLogout = () => {
     Alert.alert(
@@ -136,11 +157,31 @@ export function HomeScreen({ navigation }: Props) {
     );
   };
 
-  const handleRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await Promise.all([refetchActivity(), refetchDashboard()]);
-    setIsRefreshing(false);
-  }, [refetchActivity, refetchDashboard]);
+  const renderMain = () => {
+    if (dashboardLoading) return <HomeSkeleton />;
+
+    if (dashboardError || !dashboard) {
+      return (
+        <AppErrorView
+          message={dashboardError?.message ?? 'Не удалось загрузить данные'}
+          onRetry={() => void refetchDashboard()}
+        />
+      );
+    }
+
+    if (employeeData) {
+      return (
+        <EmployeeLayout
+          data={employeeData}
+          onNotificationPress={() => navigation.navigate(Routes.Notifications)}
+          onBookingPress={() => navigation.navigate(Routes.Bookings)}
+          onTaskPress={() => navigation.navigate(Routes.Crm)}
+        />
+      );
+    }
+
+    return <GenericDashboard dashboard={dashboard} />;
+  };
 
   return (
     <ScrollView
@@ -154,28 +195,16 @@ export function HomeScreen({ navigation }: Props) {
         />
       }
     >
-      <Text style={styles.title}>Добро пожаловать{user ? `, ${user.full_name}` : ''}</Text>
+      {renderMain()}
 
-      <View style={styles.card}>
-        <DashboardSection
-          isLoading={dashboardLoading}
-          error={dashboardError}
-          data={dashboard}
-          onRetry={() => void refetchDashboard()}
-        />
+      <View style={styles.navActions}>
+        <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
+        {user?.role === USER_ROLES.SUPERADMIN && (
+          <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
+        )}
+        <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
+        <AppButton onPress={handleLogout} title="Выйти" variant="text" />
       </View>
-
-      <View style={styles.activitySection}>
-        <Text style={styles.sectionTitle}>Моя активность</Text>
-        <ActivityFeed data={activityData} isLoading={activityLoading} isError={activityError} />
-      </View>
-
-      <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
-      {user?.role === USER_ROLES.SUPERADMIN ? (
-        <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
-      ) : null}
-      <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
-      <AppButton onPress={handleLogout} title="Выйти" variant="text" />
     </ScrollView>
   );
 }
@@ -191,7 +220,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: 'Inter_700Bold',
     color: colors.textPrimary,
   },
@@ -225,12 +254,24 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
   },
-  activitySection: {
+  kpiRow: {
+    flexDirection: 'row',
     gap: 10,
   },
+  section: {
+    gap: 8,
+  },
   sectionTitle: {
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Inter_600SemiBold',
-    color: colors.textPrimary,
+    color: colors.textSecondary,
+    letterSpacing: 0.3,
+  },
+  sectionItems: {
+    gap: 6,
+  },
+  navActions: {
+    gap: 8,
+    marginTop: 8,
   },
 });
