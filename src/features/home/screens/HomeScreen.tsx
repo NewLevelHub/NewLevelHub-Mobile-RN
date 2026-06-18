@@ -6,6 +6,7 @@ import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 import { useAuthStore } from '@/core/auth/authStore';
 import { ConnectivityProbe } from '@/core/network/connectivityProbe';
 import { colors } from '@/core/theme/colors';
+import { USER_ROLES } from '@/shared/config/constants';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppLoader } from '@/shared/ui/AppLoader';
 
@@ -72,6 +73,9 @@ export function HomeScreen({ navigation }: Props) {
       </View>
 
       <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
+      {user?.role === USER_ROLES.SUPERADMIN ? (
+        <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
+      ) : null}
       <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
       <AppButton onPress={handleLogout} title="Выйти" variant="text" />
     </View>

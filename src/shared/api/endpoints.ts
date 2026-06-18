@@ -15,6 +15,9 @@ export const API = {
     resendVerification: '/auth/email/resend/',
     roles: '/auth/roles/',
   },
+  admin: {
+    users: '/auth/users/',
+  },
   activity: {
     feed: '/activity/',
   },
