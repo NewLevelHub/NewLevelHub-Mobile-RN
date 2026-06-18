@@ -20,6 +20,9 @@ import { UserDetailScreen } from '@/features/admin/screens/UserDetailScreen';
 import { ProfileScreen } from '@/features/users/screens/ProfileScreen';
 import { ProfileEditScreen } from '@/features/users/screens/ProfileEditScreen';
 import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScreen';
+import { BookingsScreen } from '@/features/bookings/screens/BookingsScreen';
+import { CrmScreen } from '@/features/crm/screens/CrmScreen';
+import { NotificationsScreen } from '@/features/notifications/screens/NotificationsScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -105,6 +108,21 @@ export function RootNavigator() {
               name={Routes.AdminUserDetail}
               component={UserDetailScreen}
               options={{ title: 'Карточка пользователя' }}
+            />
+            <Stack.Screen
+              name={Routes.Bookings}
+              component={BookingsScreen}
+              options={{ title: 'Бронирования' }}
+            />
+            <Stack.Screen
+              name={Routes.Crm}
+              component={CrmScreen}
+              options={{ title: 'Задачи' }}
+            />
+            <Stack.Screen
+              name={Routes.Notifications}
+              component={NotificationsScreen}
+              options={{ title: 'Уведомления' }}
             />
           </>
         ) : (
