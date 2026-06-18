@@ -44,13 +44,15 @@ const linking: LinkingOptions<RootStackParamList> = {
 };
 
 export function RootNavigator() {
-  const { isLoading, isAuthenticated, bootstrap } = useAuthStore();
+  const { isLoading, isAuthenticated, bootstrapStatus, bootstrap } = useAuthStore();
 
   useEffect(() => {
     void bootstrap();
   }, [bootstrap]);
 
-  if (isLoading) {
+  // Show SplashScreen while loading OR when there is a connectivity error
+  // (SplashScreen renders the appropriate error UI for those states)
+  if (isLoading || bootstrapStatus === 'idle' || bootstrapStatus === 'checking' || bootstrapStatus === 'health_unavailable' || bootstrapStatus === 'ping_failed') {
     return <SplashScreen />;
   }
 
