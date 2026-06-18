@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
 import { useProfile } from '@/features/users/hooks/useProfile';
+import { useAvatarActions } from '@/features/users/hooks/useAvatarActions';
+import { AvatarPicker } from '@/features/users/components/AvatarPicker';
 import { AppButton } from '@/shared/ui/AppButton';
+import { AppErrorBanner } from '@/shared/ui/AppErrorBanner';
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
 
 export function ProfilePlaceholderScreen() {
@@ -14,6 +17,8 @@ export function ProfilePlaceholderScreen() {
   const { profile } = useProfile();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const { showActionSheet, isBusy, avatarCacheKey, error } = useAvatarActions();
 
   const handleLogout = () => {
     Alert.alert(
@@ -34,16 +39,36 @@ export function ProfilePlaceholderScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
+    >
       <Text style={styles.title}>Профиль</Text>
-      <Text style={styles.subtitle}>Экран профиля в разработке</Text>
+
+      {error ? <AppErrorBanner message={error} /> : null}
+
+      <View style={styles.avatarSection}>
+        <AvatarPicker
+          avatarUrl={profile?.avatar ?? null}
+          fullName={profile?.full_name ?? ''}
+          onPress={() => showActionSheet(!!profile?.avatar)}
+          isLoading={isBusy}
+          cacheKey={avatarCacheKey}
+          size={96}
+        />
+      </View>
+
       {profile ? (
         <View style={styles.card}>
           <Text style={styles.label}>{profile.full_name}</Text>
           <Text style={styles.meta}>{profile.email}</Text>
+          {profile.position ? <Text style={styles.meta}>{profile.position}</Text> : null}
           <Text style={styles.meta}>Роль: {profile.role}</Text>
+          {profile.company ? <Text style={styles.meta}>Компания: {profile.company.name}</Text> : null}
         </View>
       ) : null}
+
       <AppButton
         onPress={() => navigation.navigate(Routes.ProfileEdit)}
         title="Редактировать профиль"
@@ -55,28 +80,29 @@ export function ProfilePlaceholderScreen() {
         variant="text"
         disabled={isLoggingOut}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  container: {
     padding: 24,
     gap: 12,
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: 'Inter_700Bold',
     color: colors.textPrimary,
   },
-  subtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
+  avatarSection: {
+    alignItems: 'center',
+    marginVertical: 8,
   },
   card: {
-    marginTop: 8,
     backgroundColor: colors.surface,
     borderRadius: 12,
     borderWidth: 1,
@@ -86,11 +112,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
     color: colors.textPrimary,
   },
   meta: {
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     color: colors.textSecondary,
   },
 });

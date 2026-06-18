@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 
-import { validateSession } from '@/core/auth/authApi';
 import { setSessionExpiredHandler } from '@/core/network/apiClient';
 import { parseApiError } from '@/core/network/errorParser';
-import { EmailNotVerifiedException, InvalidCredentialsException } from '@/core/network/apiException';
+import { ApiException, EmailNotVerifiedException, InvalidCredentialsException } from '@/core/network/apiException';
 import { apiClient } from '@/core/network/apiClient';
 import { tokenStorage } from '@/core/auth/tokenStorage';
 import { mapApiUser } from '@/shared/lib/mapUser';
@@ -108,15 +107,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return;
       }
 
-      const isValid = await validateSession();
-      if (!isValid) {
-        await get().logoutLocal();
-        return;
-      }
-
+      // Single GET /auth/me/ — if access token is expired the auth interceptor
+      // refreshes it and retries automatically. If refresh also fails,
+      // handleSessionExpired fires logoutLocal via setSessionExpiredHandler.
       await get().fetchMe();
-    } catch {
-      await get().logoutLocal();
+    } catch (error) {
+      const apiError = error instanceof ApiException ? error : parseApiError(error);
+      if (apiError.statusCode === 401 || apiError.statusCode === 403) {
+        // Tokens are definitively rejected by the server — clear them.
+        await get().logoutLocal();
+      }
+      // Network error / 5xx: tokens may still be valid, keep isAuthenticated
+      // as false (initial state) so the user sees the login screen but tokens
+      // are preserved for the next attempt.
     } finally {
       set({ isLoading: false });
     }
