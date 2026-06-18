@@ -10,7 +10,7 @@ import type {
   DashboardResponse,
   EmployeeDashboard,
   SuperadminDashboard,
-  CompanyAdminDashboard,
+  CompanyAdminDashboard as CompanyAdminDashboardData,
   GuestDashboard,
 } from '@/features/core/types/dashboard';
 
@@ -20,6 +20,7 @@ import { DashboardHeader } from '@/features/home/components/DashboardHeader';
 import { UpcomingBookingItem } from '@/features/home/components/UpcomingBookingItem';
 import { DashboardTaskItem } from '@/features/home/components/DashboardTaskItem';
 import { AnnouncementItem } from '@/features/home/components/AnnouncementItem';
+import { CompanyAdminDashboard } from '@/features/home/components/CompanyAdminDashboard';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
 
@@ -113,9 +114,9 @@ function GenericDashboard({ dashboard }: { dashboard: DashboardResponse }) {
           )}
           {dashboard.role === 'company_admin' && (
             <>
-              <StatCard label="Сотрудники" value={(dashboard as CompanyAdminDashboard).employee_count} />
-              <StatCard label="Активные задачи" value={(dashboard as CompanyAdminDashboard).active_tasks} />
-              <StatCard label="Брони сегодня" value={(dashboard as CompanyAdminDashboard).bookings_today} />
+              <StatCard label="Сотрудники" value={(dashboard as CompanyAdminDashboardData).employee_count} />
+              <StatCard label="Активные задачи" value={(dashboard as CompanyAdminDashboardData).active_tasks} />
+              <StatCard label="Брони сегодня" value={(dashboard as CompanyAdminDashboardData).bookings_today} />
             </>
           )}
           {(dashboard.role === 'guest' || dashboard.role === 'reception' || dashboard.role === 'service_manager') && (
@@ -142,6 +143,7 @@ export function HomeScreen({ navigation }: Props) {
     dashboardError,
     refetchDashboard,
     employeeData,
+    companyAdminData,
     isRefreshing,
     handleRefresh,
   } = useHomeScreen();
@@ -175,6 +177,15 @@ export function HomeScreen({ navigation }: Props) {
           data={employeeData}
           onNotificationPress={() => navigation.navigate(Routes.Notifications)}
           onBookingPress={() => navigation.navigate(Routes.Bookings)}
+          onTaskPress={() => navigation.navigate(Routes.Crm)}
+        />
+      );
+    }
+
+    if (companyAdminData) {
+      return (
+        <CompanyAdminDashboard
+          data={companyAdminData}
           onTaskPress={() => navigation.navigate(Routes.Crm)}
         />
       );

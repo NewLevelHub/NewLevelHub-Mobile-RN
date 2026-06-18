@@ -15,6 +15,13 @@ const RESOURCE_TYPE_LABELS: Record<string, string> = {
   open_space: 'Открытое пространство',
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  confirmed: 'Подтверждено',
+  pending:   'Ожидание',
+  cancelled: 'Отменено',
+  no_show:   'Не пришёл',
+};
+
 function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 }
@@ -33,7 +40,7 @@ export const UpcomingBookingItem = React.memo(function UpcomingBookingItem({ ite
       </View>
       <View style={[styles.badge, item.status === 'confirmed' ? styles.badgeConfirmed : styles.badgeDefault]}>
         <Text style={[styles.badgeText, item.status === 'confirmed' ? styles.badgeTextConfirmed : styles.badgeTextDefault]}>
-          {item.status === 'confirmed' ? 'Подтверждено' : item.status}
+          {STATUS_LABELS[item.status] ?? item.status}
         </Text>
       </View>
     </TouchableOpacity>
