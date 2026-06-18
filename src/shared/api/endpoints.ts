@@ -19,7 +19,7 @@ export const API = {
     users: '/auth/users/',
   },
   activity: {
-    feed: '/activity/',
+    feed: '/auth/me/activity/',
   },
   core: {
     ping: '/ping/',

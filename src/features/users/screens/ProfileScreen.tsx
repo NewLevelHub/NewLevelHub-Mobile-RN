@@ -18,7 +18,7 @@ import { useProfile } from '@/features/users/hooks/useProfile';
 import { useAvatarActions } from '@/features/users/hooks/useAvatarActions';
 import { useActivityFeed } from '@/features/users/hooks/useActivityFeed';
 import { AvatarPicker } from '@/features/users/components/AvatarPicker';
-import { ActivityFeedCompact } from '@/features/users/components/ActivityFeedCompact';
+import { ActivityFeed } from '@/features/users/components/ActivityFeed';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppErrorBanner } from '@/shared/ui/AppErrorBanner';
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
@@ -42,7 +42,7 @@ export function ProfileScreen() {
 
   const { profile, refetch: refetchProfile } = useProfile();
   const { showActionSheet, isBusy, avatarCacheKey, error: avatarError } = useAvatarActions();
-  const { items: activityItems, isLoading: activityLoading, refetch: refetchActivity } =
+  const { data: activityData, isLoading: activityLoading, isError: activityError, refetch: refetchActivity } =
     useActivityFeed();
 
   const handleRefresh = useCallback(async () => {
@@ -139,7 +139,7 @@ export function ProfileScreen() {
       {/* Activity feed (compact) */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Активность</Text>
-        <ActivityFeedCompact items={activityItems} isLoading={activityLoading} />
+        <ActivityFeed data={activityData} isLoading={activityLoading} isError={activityError} />
       </View>
 
       {/* Menu */}
