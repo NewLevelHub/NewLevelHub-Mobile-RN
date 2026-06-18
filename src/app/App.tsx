@@ -1,13 +1,12 @@
 import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { RootNavigator } from '@/app/navigation/RootNavigator';
 import { colors } from '@/core/theme/colors';
-
-const queryClient = new QueryClient();
+import { queryClient } from '@/core/query/queryClient';
 
 export function App() {
   const [fontsLoaded] = useFonts({
