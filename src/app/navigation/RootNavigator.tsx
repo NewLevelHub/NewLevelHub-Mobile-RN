@@ -15,7 +15,7 @@ import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScre
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
 import { HomeScreen } from '@/features/home/screens/HomeScreen';
-import { ProfilePlaceholderScreen } from '@/features/users/screens/ProfilePlaceholderScreen';
+import { ProfileScreen } from '@/features/users/screens/ProfileScreen';
 import { ProfileEditScreen } from '@/features/users/screens/ProfileEditScreen';
 import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScreen';
 
@@ -64,7 +64,7 @@ export function RootNavigator() {
             />
             <Stack.Screen
               name={Routes.Profile}
-              component={ProfilePlaceholderScreen}
+              component={ProfileScreen}
               options={{ title: 'Профиль' }}
             />
             <Stack.Screen
@@ -76,6 +76,11 @@ export function RootNavigator() {
               name={Routes.ChangePassword}
               component={ChangePasswordScreen}
               options={{ title: 'Смена пароля' }}
+            />
+            <Stack.Screen
+              name={Routes.VerifyEmail}
+              component={VerifyEmailScreen}
+              options={{ title: 'Подтверждение email' }}
             />
             <Stack.Screen
               name={Routes.EmailVerifyDeepLink}

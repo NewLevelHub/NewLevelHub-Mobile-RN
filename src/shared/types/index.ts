@@ -24,6 +24,13 @@ export interface User {
   last_login?: string | null;
 }
 
+export interface ActivityItem {
+  id: number;
+  type: string;
+  description: string;
+  created_at: string;
+}
+
 export interface InviteInfo {
   company_name: string | null;
   email: string;

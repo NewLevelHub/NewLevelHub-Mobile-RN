@@ -10,20 +10,21 @@ export interface UseProfileResult {
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
-  refreshProfile: () => void;
+  refreshProfile: () => Promise<void>;
+  refetch: () => Promise<unknown>;
 }
 
 export function useProfile(): UseProfileResult {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery<User, Error>({
+  const { data, isLoading, isError, error, refetch } = useQuery<User, Error>({
     queryKey: PROFILE_QUERY_KEY,
     queryFn: fetchProfile,
   });
 
   function refreshProfile() {
-    queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+    return queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
   }
 
-  return { profile: data ?? null, isLoading, isError, error: error ?? null, refreshProfile };
+  return { profile: data ?? null, isLoading, isError, error: error ?? null, refreshProfile, refetch };
 }
