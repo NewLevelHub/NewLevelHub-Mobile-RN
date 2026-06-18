@@ -15,6 +15,9 @@ export const API = {
     resendVerification: '/auth/email/resend/',
     roles: '/auth/roles/',
   },
+  activity: {
+    feed: '/activity/',
+  },
   core: {
     ping: '/ping/',
     health: '/health/',
