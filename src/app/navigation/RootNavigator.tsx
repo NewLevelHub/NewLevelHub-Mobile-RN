@@ -23,6 +23,7 @@ import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScr
 import { BookingsScreen } from '@/features/bookings/screens/BookingsScreen';
 import { CrmScreen } from '@/features/crm/screens/CrmScreen';
 import { NotificationsScreen } from '@/features/notifications/screens/NotificationsScreen';
+import { TeamCalendarScreen } from '@/features/core/screens/TeamCalendarScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -123,6 +124,11 @@ export function RootNavigator() {
               name={Routes.Notifications}
               component={NotificationsScreen}
               options={{ title: 'Уведомления' }}
+            />
+            <Stack.Screen
+              name={Routes.TeamCalendar}
+              component={TeamCalendarScreen}
+              options={{ title: 'Календарь команды' }}
             />
           </>
         ) : (
