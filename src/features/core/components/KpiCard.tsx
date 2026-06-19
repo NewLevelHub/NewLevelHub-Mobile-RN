@@ -51,5 +51,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter_400Regular',
     color: colors.textSecondary,
+    lineHeight: 16,
   },
 });

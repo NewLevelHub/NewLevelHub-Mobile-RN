@@ -14,7 +14,8 @@ export function SectionHeader({ title, onSeeAll }: Props) {
       <Text style={styles.title}>{title}</Text>
       {onSeeAll ? (
         <Pressable
-          hitSlop={8}
+          accessibilityRole="button"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 4 }}
           style={({ pressed }) => pressed && styles.pressed}
           onPress={onSeeAll}
         >

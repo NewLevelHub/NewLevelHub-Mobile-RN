@@ -22,23 +22,41 @@ export function AppTextField({
   secureToggle = false,
   secureTextEntry,
   style,
+  onFocus,
+  onBlur,
   ...props
 }: AppTextFieldProps) {
   const [hidden, setHidden] = useState(Boolean(secureTextEntry));
+  const [focused, setFocused] = useState(false);
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputWrap, errorText ? styles.inputError : null]}>
+      <View
+        style={[
+          styles.inputWrap,
+          focused && styles.inputFocused,
+          errorText ? styles.inputError : null,
+        ]}
+      >
         <TextInput
           placeholderTextColor={colors.textSubtle}
           secureTextEntry={secureToggle ? hidden : secureTextEntry}
           style={[styles.input, style]}
+          onFocus={(e) => {
+            setFocused(true);
+            onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            setFocused(false);
+            onBlur?.(e);
+          }}
           {...props}
         />
         {secureToggle ? (
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={hidden ? 'Показать пароль' : 'Скрыть пароль'}
             onPress={() => setHidden((value) => !value)}
             style={styles.toggle}
           >
@@ -70,8 +88,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
   },
+  inputFocused: {
+    borderColor: colors.brand,
+    borderWidth: 1.5,
+  },
   inputError: {
     borderColor: colors.error,
+    borderWidth: 1.5,
   },
   input: {
     flex: 1,
@@ -81,6 +104,8 @@ const styles = StyleSheet.create({
   },
   toggle: {
     paddingLeft: 8,
+    paddingVertical: 10,
+    paddingRight: 4,
   },
   toggleText: {
     color: colors.brand,

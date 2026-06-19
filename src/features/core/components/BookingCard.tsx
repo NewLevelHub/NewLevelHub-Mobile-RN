@@ -31,6 +31,7 @@ function BookingCardComponent({ item, onPress }: Props) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       onPress={onPress}
     >

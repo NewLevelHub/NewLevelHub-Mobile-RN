@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, Pressable, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
 import { BOOKING_STATUS_LABELS, RESOURCE_TYPE_LABELS } from '@/shared/lib/labels';
@@ -30,7 +30,11 @@ export const UpcomingBookingItem = React.memo(function UpcomingBookingItem({ ite
   const badge = STATUS_BADGE[item.status] ?? { bg: colors.raised, text: colors.textMuted };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
+    <Pressable
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.container, pressed && styles.containerPressed]}
+      onPress={onPress}
+    >
       <View style={styles.content}>
         <Text style={styles.name} numberOfLines={1}>{item.resource_name}</Text>
         <Text style={styles.meta}>{typeLabel} · {timeRange}</Text>
@@ -40,7 +44,7 @@ export const UpcomingBookingItem = React.memo(function UpcomingBookingItem({ ite
           {BOOKING_STATUS_LABELS[item.status] ?? item.status}
         </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 });
 
@@ -55,6 +59,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 8,
+  },
+  containerPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.99 }],
   },
   content: {
     flex: 1,

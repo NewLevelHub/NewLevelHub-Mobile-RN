@@ -45,7 +45,7 @@ export interface Resource {
   capsuleZone: string;
   assignedCompany: number | null;
   assignedCompanyName: string | null;
-  status: ResourceStatus;
+  status: ResourceStatus | null;
   reason: string | null;
   availableAt: string | null;
   schedule?: ScheduleSlot[];

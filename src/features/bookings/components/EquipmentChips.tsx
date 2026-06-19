@@ -32,17 +32,19 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 8,
   },
   chip: {
     backgroundColor: colors.brandSubtle,
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: colors.brand + '30',
   },
   label: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 11,
+    fontFamily: 'Inter_500Medium',
+    fontSize: 13,
     color: colors.brandText,
   },
 });

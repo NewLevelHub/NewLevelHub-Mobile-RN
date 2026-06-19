@@ -41,6 +41,7 @@ export function AppButton({
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
         style,
+        pressed && !isDisabled && { transform: [{ scale: 0.98 }] },
       ]}
       {...props}
     >
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   pressed: {
-    opacity: 0.9,
+    opacity: 0.82,
   },
   disabled: {
     opacity: 0.5,

@@ -1,20 +1,23 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { colors } from '@/core/theme/colors';
 import type { QuickAction } from '@/features/core/types/dashboard';
 
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
+
 interface ActionMeta {
   label: string;
-  icon: string;
+  icon: IoniconsName;
 }
 
 const ACTION_META: Record<QuickAction, ActionMeta> = {
-  invite_user: { label: 'Пригласить', icon: '👤' },
-  create_announcement: { label: 'Объявление', icon: '📢' },
-  manage_bookings: { label: 'Брони', icon: '📅' },
-  view_analytics: { label: 'Аналитика', icon: '📊' },
-  manage_companies: { label: 'Компании', icon: '🏢' },
+  invite_user: { label: 'Пригласить', icon: 'person-add-outline' },
+  create_announcement: { label: 'Объявление', icon: 'megaphone-outline' },
+  manage_bookings: { label: 'Брони', icon: 'calendar-outline' },
+  view_analytics: { label: 'Аналитика', icon: 'bar-chart-outline' },
+  manage_companies: { label: 'Компании', icon: 'business-outline' },
 };
 
 interface Props {
@@ -30,7 +33,7 @@ function QuickActionChipComponent({ action, onPress }: Props) {
       style={({ pressed }) => [styles.chip, pressed && styles.pressed]}
       onPress={() => onPress?.(action)}
     >
-      <Text style={styles.icon}>{meta.icon}</Text>
+      <Ionicons name={meta.icon} size={16} color={colors.textSecondary} />
       <Text style={styles.label}>{meta.label}</Text>
     </Pressable>
   );
@@ -77,9 +80,6 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.7,
     backgroundColor: colors.hover,
-  },
-  icon: {
-    fontSize: 16,
   },
   label: {
     fontSize: 13,

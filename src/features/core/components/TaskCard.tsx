@@ -32,6 +32,7 @@ function TaskCardComponent({ item, onPress }: Props) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       style={({ pressed }) => [
         styles.card,
         item.is_overdue && styles.cardOverdue,
@@ -49,7 +50,7 @@ function TaskCardComponent({ item, onPress }: Props) {
           </Text>
           {dueDate ? (
             <Text style={[styles.due, item.is_overdue && styles.dueOverdue]}>
-              {item.is_overdue ? '⚠ ' : ''}{dueDate}
+              {dueDate}
             </Text>
           ) : null}
         </View>
