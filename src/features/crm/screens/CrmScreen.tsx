@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors } from '@/core/theme/colors';
 
 export function CrmScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Задачи — скоро</Text>
-    </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.inner}>
+        <Text style={styles.text}>Задачи — скоро</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -14,6 +17,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  inner: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,7 +1,10 @@
 import { Alert, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { Routes, type HomeStackParamList, type MainTabParamList } from '@/app/navigation/routes';
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
 import { AppButton } from '@/shared/ui/AppButton';
@@ -25,7 +28,10 @@ import { CompanyAdminDashboard } from '@/features/home/components/CompanyAdminDa
 import { SuperadminDashboard } from '@/features/home/components/SuperadminDashboard';
 import { GuestDashboard } from '@/features/home/components/GuestDashboard';
 
-type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<HomeStackParamList, typeof Routes.Home>,
+  BottomTabScreenProps<MainTabParamList>
+>;
 
 // ─── Shared sub-components ────────────────────────────────────────────────────
 
@@ -166,7 +172,7 @@ export function HomeScreen({ navigation }: Props) {
 
   const handleQuickAction = (action: QuickAction) => {
     if (action === 'manage_bookings') {
-      navigation.navigate(Routes.Bookings);
+      navigation.navigate('BookingsTab');
     } else if (action === 'manage_companies') {
       navigation.navigate(Routes.AdminUsers);
     } else {
@@ -200,8 +206,8 @@ export function HomeScreen({ navigation }: Props) {
         <EmployeeLayout
           data={employeeData}
           onNotificationPress={() => navigation.navigate(Routes.Notifications)}
-          onBookingPress={() => navigation.navigate(Routes.Bookings)}
-          onTaskPress={() => navigation.navigate(Routes.Crm)}
+          onBookingPress={() => navigation.navigate('BookingsTab')}
+          onTaskPress={() => navigation.navigate('CrmTab')}
         />
       );
     }
@@ -210,7 +216,7 @@ export function HomeScreen({ navigation }: Props) {
       return (
         <CompanyAdminDashboard
           data={companyAdminData}
-          onTaskPress={() => navigation.navigate(Routes.Crm)}
+          onTaskPress={() => navigation.navigate('CrmTab')}
         />
       );
     }
@@ -219,7 +225,7 @@ export function HomeScreen({ navigation }: Props) {
       return (
         <GuestDashboard
           data={guestData}
-          onBookingPress={() => navigation.navigate(Routes.Bookings)}
+          onBookingPress={() => navigation.navigate('BookingsTab')}
         />
       );
     }
@@ -228,38 +234,42 @@ export function HomeScreen({ navigation }: Props) {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-          tintColor={colors.brand}
-        />
-      }
-    >
-      {renderMain()}
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.brand}
+          />
+        }
+      >
+        {renderMain()}
 
-      <View style={styles.navActions}>
-        <AppButton onPress={() => navigation.navigate(Routes.Profile)} title="Профиль" variant="secondary" />
-        {user?.role === USER_ROLES.SUPERADMIN && (
-          <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
-        )}
-        {(user?.role === USER_ROLES.EMPLOYEE || user?.role === USER_ROLES.COMPANY_ADMIN || user?.role === USER_ROLES.SUPERADMIN) && (
-          <AppButton onPress={() => navigation.navigate(Routes.TeamCalendar)} title="Календарь команды" variant="secondary" />
-        )}
-        <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
-        <AppButton onPress={handleLogout} title="Выйти" variant="text" />
-      </View>
-    </ScrollView>
+        <View style={styles.navActions}>
+          {user?.role === USER_ROLES.SUPERADMIN && (
+            <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
+          )}
+          {(user?.role === USER_ROLES.EMPLOYEE || user?.role === USER_ROLES.COMPANY_ADMIN || user?.role === USER_ROLES.SUPERADMIN) && (
+            <AppButton onPress={() => navigation.navigate(Routes.TeamCalendar)} title="Календарь команды" variant="secondary" />
+          )}
+          <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
+          <AppButton onPress={handleLogout} title="Выйти" variant="text" />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
+  safeArea: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  scroll: {
+    flex: 1,
   },
   container: {
     padding: 24,

@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { LinkingOptions } from '@react-navigation/native';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { MainTabNavigator } from '@/app/navigation/MainTabNavigator';
 import { useAuthStore } from '@/core/auth/authStore';
 import { SplashScreen } from '@/features/auth/screens/SplashScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
@@ -13,17 +14,6 @@ import { EmailVerifyDeepLinkScreen } from '@/features/auth/screens/EmailVerifyDe
 import { VerifyEmailScreen } from '@/features/auth/screens/VerifyEmailScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
 import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
-import { UiKitDemoScreen } from '@/features/dev/screens/UiKitDemoScreen';
-import { HomeScreen } from '@/features/home/screens/HomeScreen';
-import { UsersListScreen } from '@/features/admin/screens/UsersListScreen';
-import { UserDetailScreen } from '@/features/admin/screens/UserDetailScreen';
-import { ProfileScreen } from '@/features/users/screens/ProfileScreen';
-import { ProfileEditScreen } from '@/features/users/screens/ProfileEditScreen';
-import { ChangePasswordScreen } from '@/features/users/screens/ChangePasswordScreen';
-import { BookingsScreen } from '@/features/bookings/screens/BookingsScreen';
-import { CrmScreen } from '@/features/crm/screens/CrmScreen';
-import { NotificationsScreen } from '@/features/notifications/screens/NotificationsScreen';
-import { TeamCalendarScreen } from '@/features/core/screens/TeamCalendarScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -54,81 +44,28 @@ export function RootNavigator() {
     void bootstrap();
   }, [bootstrap]);
 
-  // Show SplashScreen while loading OR when there is a connectivity error
-  // (SplashScreen renders the appropriate error UI for those states)
   if (isLoading || bootstrapStatus === 'idle' || bootstrapStatus === 'checking' || bootstrapStatus === 'health_unavailable' || bootstrapStatus === 'ping_failed') {
     return <SplashScreen />;
   }
 
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
           <>
             <Stack.Screen
-              name={Routes.Home}
-              component={HomeScreen}
-              options={{ title: 'NewLevelHub' }}
-            />
-            <Stack.Screen
-              name={Routes.Profile}
-              component={ProfileScreen}
-              options={{ title: 'Профиль' }}
-            />
-            <Stack.Screen
-              name={Routes.ProfileEdit}
-              component={ProfileEditScreen}
-              options={{ title: 'Редактировать профиль' }}
-            />
-            <Stack.Screen
-              name={Routes.ChangePassword}
-              component={ChangePasswordScreen}
-              options={{ title: 'Смена пароля' }}
+              name={Routes.MainTabs}
+              component={MainTabNavigator}
             />
             <Stack.Screen
               name={Routes.VerifyEmail}
               component={VerifyEmailScreen}
-              options={{ title: 'Подтверждение email' }}
+              options={{ headerShown: true, title: 'Подтверждение email' }}
             />
             <Stack.Screen
               name={Routes.EmailVerifyDeepLink}
               component={EmailVerifyDeepLinkScreen}
-              options={{ title: 'Подтверждение email' }}
-            />
-            <Stack.Screen
-              name={Routes.UiKit}
-              component={UiKitDemoScreen}
-              options={{ title: 'UI Kit' }}
-            />
-            <Stack.Screen
-              name={Routes.AdminUsers}
-              component={UsersListScreen}
-              options={{ title: 'Пользователи' }}
-            />
-            <Stack.Screen
-              name={Routes.AdminUserDetail}
-              component={UserDetailScreen}
-              options={{ title: 'Карточка пользователя' }}
-            />
-            <Stack.Screen
-              name={Routes.Bookings}
-              component={BookingsScreen}
-              options={{ title: 'Бронирования' }}
-            />
-            <Stack.Screen
-              name={Routes.Crm}
-              component={CrmScreen}
-              options={{ title: 'Задачи' }}
-            />
-            <Stack.Screen
-              name={Routes.Notifications}
-              component={NotificationsScreen}
-              options={{ title: 'Уведомления' }}
-            />
-            <Stack.Screen
-              name={Routes.TeamCalendar}
-              component={TeamCalendarScreen}
-              options={{ title: 'Календарь команды' }}
+              options={{ headerShown: true, title: 'Подтверждение email' }}
             />
           </>
         ) : (

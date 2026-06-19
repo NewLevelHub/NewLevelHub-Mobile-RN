@@ -229,7 +229,7 @@ export function TeamCalendarScreen() {
 
   if (!user || FORBIDDEN_ROLES.has(user.role)) {
     return (
-      <SafeAreaView style={styles.guardContainer} edges={['bottom']}>
+      <SafeAreaView style={styles.guardContainer} edges={[]}>
         <Text style={styles.guardText}>Нет доступа к командному календарю</Text>
       </SafeAreaView>
     );
@@ -257,7 +257,7 @@ function TeamCalendarContent() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.centered} edges={['bottom']}>
+      <SafeAreaView style={styles.centered} edges={[]}>
         <AppLoader />
       </SafeAreaView>
     );
@@ -265,7 +265,7 @@ function TeamCalendarContent() {
 
   if (isForbidden) {
     return (
-      <SafeAreaView style={styles.guardContainer} edges={['bottom']}>
+      <SafeAreaView style={styles.guardContainer} edges={[]}>
         <Text style={styles.guardText}>Нет доступа к командному календарю</Text>
       </SafeAreaView>
     );
@@ -273,7 +273,7 @@ function TeamCalendarContent() {
 
   if (error) {
     return (
-      <SafeAreaView style={styles.centered} edges={['bottom']}>
+      <SafeAreaView style={styles.centered} edges={[]}>
         <AppErrorView
           message={error.message ?? 'Не удалось загрузить календарь'}
           onRetry={() => void refetch()}
@@ -283,7 +283,7 @@ function TeamCalendarContent() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={[]}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}

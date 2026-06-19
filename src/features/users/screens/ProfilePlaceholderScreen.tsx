@@ -10,13 +10,13 @@ import { useAvatarActions } from '@/features/users/hooks/useAvatarActions';
 import { AvatarPicker } from '@/features/users/components/AvatarPicker';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppErrorBanner } from '@/shared/ui/AppErrorBanner';
-import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { Routes, type ProfileStackParamList } from '@/app/navigation/routes';
 
 export function ProfilePlaceholderScreen() {
   const logout = useAuthStore((state) => state.logout);
   const { profile } = useProfile();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
 
   const { showActionSheet, isBusy, avatarCacheKey, error } = useAvatarActions();
 
