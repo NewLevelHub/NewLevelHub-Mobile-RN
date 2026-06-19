@@ -11,7 +11,7 @@ import type {
   EmployeeDashboard,
   SuperadminDashboard as SuperadminDashboardData,
   CompanyAdminDashboard as CompanyAdminDashboardData,
-  GuestDashboard,
+  GuestDashboard as GuestDashboardData,
   QuickAction,
 } from '@/features/core/types/dashboard';
 
@@ -23,6 +23,7 @@ import { DashboardTaskItem } from '@/features/home/components/DashboardTaskItem'
 import { AnnouncementItem } from '@/features/home/components/AnnouncementItem';
 import { CompanyAdminDashboard } from '@/features/home/components/CompanyAdminDashboard';
 import { SuperadminDashboard } from '@/features/home/components/SuperadminDashboard';
+import { GuestDashboard } from '@/features/home/components/GuestDashboard';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
 
@@ -123,9 +124,9 @@ function GenericDashboard({ dashboard }: { dashboard: DashboardResponse }) {
           )}
           {(dashboard.role === 'guest' || dashboard.role === 'reception' || dashboard.role === 'service_manager') && (
             <>
-              <StatCard label="Мои брони" value={(dashboard as GuestDashboard).my_bookings_today} />
-              <StatCard label="Свободных столов" value={(dashboard as GuestDashboard).quick_booking.available_desks} />
-              <StatCard label="Свободных комнат" value={(dashboard as GuestDashboard).quick_booking.available_rooms} />
+              <StatCard label="Мои брони" value={(dashboard as GuestDashboardData).my_bookings_today} />
+              <StatCard label="Свободных столов" value={(dashboard as GuestDashboardData).quick_booking.available_desks} />
+              <StatCard label="Свободных комнат" value={(dashboard as GuestDashboardData).quick_booking.available_rooms} />
             </>
           )}
         </View>
@@ -147,6 +148,7 @@ export function HomeScreen({ navigation }: Props) {
     superadminData,
     employeeData,
     companyAdminData,
+    guestData,
     isRefreshing,
     handleRefresh,
   } = useHomeScreen();
@@ -209,6 +211,15 @@ export function HomeScreen({ navigation }: Props) {
         <CompanyAdminDashboard
           data={companyAdminData}
           onTaskPress={() => navigation.navigate(Routes.Crm)}
+        />
+      );
+    }
+
+    if (guestData) {
+      return (
+        <GuestDashboard
+          data={guestData}
+          onBookingPress={() => navigation.navigate(Routes.Bookings)}
         />
       );
     }
