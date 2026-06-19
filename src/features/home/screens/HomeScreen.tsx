@@ -172,7 +172,7 @@ export function HomeScreen({ navigation }: Props) {
 
   const handleQuickAction = (action: QuickAction) => {
     if (action === 'manage_bookings') {
-      navigation.navigate('BookingsTab');
+      navigation.navigate('BookingsTab', { screen: Routes.ResourceCatalog });
     } else if (action === 'manage_companies') {
       navigation.navigate(Routes.AdminUsers);
     } else {
@@ -206,7 +206,7 @@ export function HomeScreen({ navigation }: Props) {
         <EmployeeLayout
           data={employeeData}
           onNotificationPress={() => navigation.navigate(Routes.Notifications)}
-          onBookingPress={() => navigation.navigate('BookingsTab')}
+          onBookingPress={() => navigation.navigate('BookingsTab', { screen: Routes.ResourceCatalog })}
           onTaskPress={() => navigation.navigate('CrmTab')}
         />
       );
@@ -225,7 +225,7 @@ export function HomeScreen({ navigation }: Props) {
       return (
         <GuestDashboard
           data={guestData}
-          onBookingPress={() => navigation.navigate('BookingsTab')}
+          onBookingPress={() => navigation.navigate('BookingsTab', { screen: Routes.ResourceCatalog })}
         />
       );
     }
