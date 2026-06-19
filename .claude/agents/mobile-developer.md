@@ -37,13 +37,18 @@ src/
   app/
     App.tsx                        # Root: fonts, QueryClient, SafeAreaProvider
     navigation/
-      RootNavigator.tsx            # Stack navigator, auth-gated screen sets
+      RootNavigator.tsx            # Root auth gate (unauthenticated vs authenticated)
+      HomeStack.tsx                # Authenticated home tab stack
+      MainTabNavigator.tsx         # Bottom tab navigator (Home, Bookings, Profile…)
+      ProfileStack.tsx             # Profile tab stack
       routes.ts                    # Routes const + RootStackParamList
   core/
     auth/
       authApi.ts                   # validateSession helper
       authStore.ts                 # Zustand auth store
       tokenStorage.ts              # expo-secure-store wrapper
+    bootstrap/
+      appBootstrap.ts              # App startup logic
     config/
       apiConfig.ts                 # baseUrl, timeout, language from env
       env.ts                       # Typed EXPO_PUBLIC_ env vars
@@ -51,13 +56,59 @@ src/
       apiClient.ts                 # Axios instance + interceptors
       apiException.ts              # Custom exception classes
       errorParser.ts               # Parses Axios errors → ApiError
+    query/
+      queryClient.ts               # Shared TanStack QueryClient instance
     theme/
       brandTheme.ts                # Dynamic brand color calculations
       colors.ts                    # Design token object (source of truth)
   features/
-    auth/screens/                  # Login, Register, Verify, etc.
-    home/screens/                  # HomeScreen
-    users/screens/                 # Profile screens
+    admin/
+      hooks/                       # useAdminUsers, useAdminUserDetail
+      screens/                     # UsersListScreen, UserDetailScreen
+      components/                  # AdminUserItem, AdminUserSkeleton, etc.
+    auth/
+      hooks/                       # useRegister, useLogin, useForgotPassword, etc.
+      screens/                     # Login, Register, Verify, etc.
+    bookings/
+      screens/                     # BookingsScreen
+    core/                          # ⚠️ Cross-feature module (shared dashboard/calendar logic)
+      api/
+        dashboardApi.ts            # Dashboard API calls + mapDashboard mapper
+        calendarApi.ts             # Calendar API calls + mapCalendarEvent mapper
+      components/
+        index.ts                   # Re-exports KpiCard, KpiRow, BookingCard, TaskCard, etc.
+      hooks/
+        useDashboard.ts            # Dashboard data fetching hook
+        useCalendarEvents.ts       # Calendar events hook
+      screens/
+        TeamCalendarScreen.tsx
+        ServiceUnavailableScreen.tsx
+      types/
+        dashboard.ts               # DashboardResponse union + all sub-types (SuperadminDashboard, CompanyAdminDashboard, EmployeeDashboard, GuestDashboard)
+        calendar.ts                # CalendarEvent types
+    crm/screens/                   # CrmScreen
+    dev/screens/                   # UiKitDemoScreen (dev only)
+    home/
+      hooks/
+        useHomeScreen.ts           # Home screen data + handlers
+      screens/
+        HomeScreen.tsx
+      components/
+        DashboardByRole.tsx        # ← Single role-switch entry point (do not duplicate)
+        SuperadminDashboard.tsx
+        CompanyAdminDashboard.tsx
+        EmployeeDashboard.tsx
+        GuestDashboard.tsx
+        HomeSkeleton.tsx
+        DashboardHeader.tsx
+        AnnouncementItem.tsx / DashboardTaskItem.tsx / UpcomingBookingItem.tsx / TeamBookingItem.tsx
+    notifications/screens/         # NotificationsScreen
+    users/
+      hooks/                       # useProfile, useProfileEdit, useAvatarActions, etc.
+      screens/                     # ProfileScreen, ProfileEditScreen, ChangePasswordScreen
+      components/                  # AvatarPicker, ActivityFeed, ActivityFeedCompact
+      types/
+        activity.ts                # ActivityItem types
   shared/
     api/
       endpoints.ts                 # const API = { auth: {...}, ... }
@@ -66,11 +117,14 @@ src/
     lib/
       mapUser.ts                   # API response → User interface
       labels.ts                    # Shared enum label maps (booking status, priority, leave type, resource type, announcement category)
+      useDebounce.ts               # Shared debounce hook
     types/
-      index.ts                     # User, AuthTokens, LoginResponse
+      index.ts                     # User, AuthTokens, LoginResponse, PaginatedResponse, AdminUserDetail
     ui/
       AppButton.tsx                # Shared button component
-      AppErrorBanner.tsx           # Error display
+      AppErrorBanner.tsx           # Error display (inline banner)
+      AppErrorView.tsx             # Full-screen error view
+      AppEmptyView.tsx             # Empty state view
       AppLoader.tsx                # Loading indicator
       AppTextField.tsx             # Text input component
 ```
@@ -84,7 +138,7 @@ src/
 3. **HTTP client:** Always use `apiClient` from `@/core/network/apiClient` — never create a new axios instance
 4. **Colors:** Always use `colors` from `@/core/theme/colors` — never hardcode hex values in StyleSheet or inline styles
 5. **Constants/Enums:** Always use values from `@/shared/config/constants` — never raw strings
-6. **Types:** Always use interfaces from `@/shared/types/index.ts` — never duplicate them
+6. **Types:** Cross-feature types (User, AuthTokens, etc.) live in `@/shared/types/index.ts`. Domain-specific types live in `features/<feature>/types/` (e.g. DashboardResponse → `@/features/core/types/dashboard`). Never duplicate — always import from the canonical source.
 7. **Auth state:** Only via `useAuthStore` from `@/core/auth/authStore` — never import the Zustand store directly in screens
 8. **Navigation:** Always use `Routes` from `@/app/navigation/routes` — never hardcode screen name strings
 9. **Environment:** Always use `env` from `@/core/config/env` — never access `process.env.EXPO_PUBLIC_*` directly in screens/components
@@ -304,9 +358,10 @@ if (user.role === USER_ROLES.COMPANY_ADMIN) { ... }
 ## 🔄 Workflow
 
 **Step 1: Understand**
-- Check `@/shared/types/index.ts` for existing interfaces
+- Check `@/shared/types/index.ts` for cross-feature interfaces; check `features/<feature>/types/` for domain types
 - Check `@/shared/api/endpoints.ts` for existing API paths
 - Check `@/app/navigation/routes.ts` before adding new screens
+- For home/dashboard work: `DashboardByRole` in `features/home/components/DashboardByRole.tsx` is the **single role-switch** — do not add another switch elsewhere
 
 **Step 2: Plan**
 - If the screen has a list → plan `XxxItem`, `XxxSkeleton`, `XxxEmptyState`, `useXxx` hook
