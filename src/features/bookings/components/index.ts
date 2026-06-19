@@ -8,3 +8,4 @@ export { ReservationCard } from './ReservationCard';
 export { BookingFilterChips } from './BookingFilterChips';
 export { ConflictErrorBanner } from './ConflictErrorBanner';
 export { ResourceCatalogSkeleton } from './ResourceCatalogSkeleton';
+export { AvailabilityFilterSheet } from './AvailabilityFilterSheet';

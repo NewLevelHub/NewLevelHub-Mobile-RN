@@ -19,6 +19,7 @@ import { colors } from '@/core/theme/colors';
 import { ResourceCard } from '@/features/bookings/components/ResourceCard';
 import { BookingFilterChips } from '@/features/bookings/components/BookingFilterChips';
 import { ResourceCatalogSkeleton } from '@/features/bookings/components/ResourceCatalogSkeleton';
+import { AvailabilityFilterSheet } from '@/features/bookings/components/AvailabilityFilterSheet';
 import { useResources } from '@/features/bookings/hooks/useResources';
 import type { Resource } from '@/features/bookings/types/resource';
 import type { ResourceFilters } from '@/features/bookings/hooks/useResources';
@@ -64,6 +65,15 @@ function CatalogHeader({ filters, floors, handlers }: HeaderProps) {
         floors={floors.length > 0 ? floors : undefined}
         selectedFloor={filters.floor}
         onFloorChange={handlers.onFloorChange}
+      />
+
+      {/* Availability (time interval) filter */}
+      <AvailabilityFilterSheet
+        resourceType={filters.type}
+        availableFrom={filters.availableFrom}
+        availableTo={filters.availableTo}
+        onApply={(from, to) => handlers.onAvailabilityChange(from, to)}
+        onReset={() => handlers.onAvailabilityChange(null, null)}
       />
 
       {/* Capacity stepper — only for meeting_room */}
