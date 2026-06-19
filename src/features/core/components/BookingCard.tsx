@@ -2,18 +2,15 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { BOOKING_STATUS_LABELS } from '@/shared/lib/labels';
 import type { BookingRecent } from '@/features/core/types/dashboard';
 
-const STATUS_LABELS: Record<string, string> = {
-  confirmed: 'Подтверждено',
-  cancelled: 'Отменено',
-  pending: 'На рассмотрении',
-};
-
 const STATUS_COLORS: Record<string, { text: string; bg: string }> = {
-  confirmed: { text: colors.success, bg: colors.successBackground },
-  cancelled: { text: colors.error, bg: colors.errorBackground },
-  pending: { text: colors.warning, bg: colors.warningBackground },
+  confirmed:  { text: colors.success,  bg: colors.successBackground },
+  completed:  { text: colors.success,  bg: colors.successBackground },
+  pending:    { text: colors.warning,  bg: colors.warningBackground },
+  cancelled:  { text: colors.error,    bg: colors.errorBackground },
+  no_show:    { text: colors.error,    bg: colors.errorBackground },
 };
 
 function formatTimeRange(start: string, end: string): string {
@@ -27,8 +24,8 @@ interface Props {
 }
 
 function BookingCardComponent({ item, onPress }: Props) {
-  const statusKey = item.status in STATUS_LABELS ? item.status : 'pending';
-  const statusLabel = STATUS_LABELS[statusKey] ?? item.status;
+  const statusKey = item.status in STATUS_COLORS ? item.status : 'pending';
+  const statusLabel = BOOKING_STATUS_LABELS[item.status] ?? item.status;
   const statusColor = STATUS_COLORS[statusKey] ?? { text: colors.textMuted, bg: colors.raised };
   const timeRange = formatTimeRange(item.start_time, item.end_time);
 

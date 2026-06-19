@@ -9,9 +9,10 @@ import { AppErrorView } from '@/shared/ui/AppErrorView';
 import type {
   DashboardResponse,
   EmployeeDashboard,
-  SuperadminDashboard,
+  SuperadminDashboard as SuperadminDashboardData,
   CompanyAdminDashboard as CompanyAdminDashboardData,
   GuestDashboard,
+  QuickAction,
 } from '@/features/core/types/dashboard';
 
 import { useHomeScreen } from '@/features/home/hooks/useHomeScreen';
@@ -21,6 +22,7 @@ import { UpcomingBookingItem } from '@/features/home/components/UpcomingBookingI
 import { DashboardTaskItem } from '@/features/home/components/DashboardTaskItem';
 import { AnnouncementItem } from '@/features/home/components/AnnouncementItem';
 import { CompanyAdminDashboard } from '@/features/home/components/CompanyAdminDashboard';
+import { SuperadminDashboard } from '@/features/home/components/SuperadminDashboard';
 
 type Props = NativeStackScreenProps<RootStackParamList, typeof Routes.Home>;
 
@@ -107,9 +109,9 @@ function GenericDashboard({ dashboard }: { dashboard: DashboardResponse }) {
         <View style={styles.statsRow}>
           {dashboard.role === 'superadmin' && (
             <>
-              <StatCard label="Компании" value={(dashboard as SuperadminDashboard).total_companies} />
-              <StatCard label="Пользователи" value={(dashboard as SuperadminDashboard).total_users} />
-              <StatCard label="Брони сегодня" value={(dashboard as SuperadminDashboard).bookings_today} />
+              <StatCard label="Компании" value={(dashboard as SuperadminDashboardData).total_companies} />
+              <StatCard label="Пользователи" value={(dashboard as SuperadminDashboardData).total_users} />
+              <StatCard label="Брони сегодня" value={(dashboard as SuperadminDashboardData).bookings_today} />
             </>
           )}
           {dashboard.role === 'company_admin' && (
@@ -142,6 +144,7 @@ export function HomeScreen({ navigation }: Props) {
     dashboardLoading,
     dashboardError,
     refetchDashboard,
+    superadminData,
     employeeData,
     companyAdminData,
     isRefreshing,
@@ -159,6 +162,16 @@ export function HomeScreen({ navigation }: Props) {
     );
   };
 
+  const handleQuickAction = (action: QuickAction) => {
+    if (action === 'manage_bookings') {
+      navigation.navigate(Routes.Bookings);
+    } else if (action === 'manage_companies') {
+      navigation.navigate(Routes.AdminUsers);
+    } else {
+      Alert.alert('Скоро', 'Функция будет доступна в следующем обновлении');
+    }
+  };
+
   const renderMain = () => {
     if (dashboardLoading) return <HomeSkeleton />;
 
@@ -167,6 +180,15 @@ export function HomeScreen({ navigation }: Props) {
         <AppErrorView
           message={dashboardError?.message ?? 'Не удалось загрузить данные'}
           onRetry={() => void refetchDashboard()}
+        />
+      );
+    }
+
+    if (superadminData) {
+      return (
+        <SuperadminDashboard
+          data={superadminData}
+          onQuickAction={handleQuickAction}
         />
       );
     }

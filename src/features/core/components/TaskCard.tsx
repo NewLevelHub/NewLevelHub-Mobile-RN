@@ -2,18 +2,14 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { PRIORITY_LABELS } from '@/shared/lib/labels';
 import type { DashboardTask } from '@/features/core/types/dashboard';
-
-const PRIORITY_LABELS: Record<string, string> = {
-  low: 'Низкий',
-  medium: 'Средний',
-  high: 'Высокий',
-};
 
 const PRIORITY_COLORS: Record<string, { text: string; bg: string }> = {
   low: { text: colors.textMuted, bg: colors.raised },
   medium: { text: colors.warning, bg: colors.warningBackground },
   high: { text: colors.error, bg: colors.errorBackground },
+  urgent: { text: colors.error, bg: colors.errorBackground },
 };
 
 function formatDueDate(iso: string | null): string | null {
@@ -29,8 +25,8 @@ interface Props {
 }
 
 function TaskCardComponent({ item, onPress }: Props) {
-  const priorityKey = item.priority in PRIORITY_LABELS ? item.priority : 'low';
-  const priorityLabel = PRIORITY_LABELS[priorityKey] ?? item.priority;
+  const priorityKey = item.priority in PRIORITY_COLORS ? item.priority : 'low';
+  const priorityLabel = PRIORITY_LABELS[item.priority] ?? item.priority;
   const priorityColor = PRIORITY_COLORS[priorityKey] ?? PRIORITY_COLORS.low;
   const dueDate = formatDueDate(item.due_date);
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { colors } from '@/core/theme/colors';
+import { BOOKING_STATUS_LABELS, RESOURCE_TYPE_LABELS } from '@/shared/lib/labels';
 import type { UpcomingBooking } from '@/features/core/types/dashboard';
 
 interface Props {
@@ -9,17 +10,12 @@ interface Props {
   onPress: () => void;
 }
 
-const RESOURCE_TYPE_LABELS: Record<string, string> = {
-  meeting_room: 'Переговорная',
-  desk: 'Стол',
-  open_space: 'Открытое пространство',
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  confirmed: 'Подтверждено',
-  pending:   'Ожидание',
-  cancelled: 'Отменено',
-  no_show:   'Не пришёл',
+const STATUS_BADGE: Record<string, { bg: string; text: string }> = {
+  confirmed:  { bg: colors.successBackground, text: colors.success },
+  completed:  { bg: colors.successBackground, text: colors.success },
+  pending:    { bg: colors.warningBackground, text: colors.warning },
+  cancelled:  { bg: colors.errorBackground,   text: colors.error },
+  no_show:    { bg: colors.errorBackground,   text: colors.error },
 };
 
 function formatTime(iso: string): string {
@@ -31,6 +27,7 @@ export const UpcomingBookingItem = React.memo(function UpcomingBookingItem({ ite
     ? 'Весь день'
     : `${formatTime(item.start_time)} – ${formatTime(item.end_time)}`;
   const typeLabel = RESOURCE_TYPE_LABELS[item.resource_type] ?? item.resource_type;
+  const badge = STATUS_BADGE[item.status] ?? { bg: colors.raised, text: colors.textMuted };
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
@@ -38,9 +35,9 @@ export const UpcomingBookingItem = React.memo(function UpcomingBookingItem({ ite
         <Text style={styles.name} numberOfLines={1}>{item.resource_name}</Text>
         <Text style={styles.meta}>{typeLabel} · {timeRange}</Text>
       </View>
-      <View style={[styles.badge, item.status === 'confirmed' ? styles.badgeConfirmed : styles.badgeDefault]}>
-        <Text style={[styles.badgeText, item.status === 'confirmed' ? styles.badgeTextConfirmed : styles.badgeTextDefault]}>
-          {STATUS_LABELS[item.status] ?? item.status}
+      <View style={[styles.badge, { backgroundColor: badge.bg }]}>
+        <Text style={[styles.badgeText, { color: badge.text }]}>
+          {BOOKING_STATUS_LABELS[item.status] ?? item.status}
         </Text>
       </View>
     </TouchableOpacity>
@@ -78,20 +75,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  badgeConfirmed: {
-    backgroundColor: colors.successBackground,
-  },
-  badgeDefault: {
-    backgroundColor: colors.raised,
-  },
   badgeText: {
     fontSize: 11,
     fontFamily: 'Inter_500Medium',
-  },
-  badgeTextConfirmed: {
-    color: colors.success,
-  },
-  badgeTextDefault: {
-    color: colors.textMuted,
   },
 });
