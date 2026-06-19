@@ -17,6 +17,7 @@ export const Routes = {
   Bookings: 'Bookings',
   Crm: 'Crm',
   Notifications: 'Notifications',
+  TeamCalendar: 'TeamCalendar',
 } as const;
 
 export type RootStackParamList = {
@@ -38,9 +39,11 @@ export type RootStackParamList = {
   [Routes.Bookings]: undefined;
   [Routes.Crm]: undefined;
   [Routes.Notifications]: undefined;
+  [Routes.TeamCalendar]: undefined;
 };
 
 export const authRequiredRoutes = new Set<string>([
   Routes.Home, Routes.Profile, Routes.ProfileEdit, Routes.ChangePassword,
   Routes.AdminUsers, Routes.AdminUserDetail, Routes.Bookings, Routes.Crm, Routes.Notifications,
+  Routes.TeamCalendar,
 ]);

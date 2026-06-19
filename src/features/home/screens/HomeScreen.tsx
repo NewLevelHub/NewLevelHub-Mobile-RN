@@ -246,6 +246,9 @@ export function HomeScreen({ navigation }: Props) {
         {user?.role === USER_ROLES.SUPERADMIN && (
           <AppButton onPress={() => navigation.navigate(Routes.AdminUsers)} title="Пользователи (Admin)" variant="secondary" />
         )}
+        {(user?.role === USER_ROLES.EMPLOYEE || user?.role === USER_ROLES.COMPANY_ADMIN || user?.role === USER_ROLES.SUPERADMIN) && (
+          <AppButton onPress={() => navigation.navigate(Routes.TeamCalendar)} title="Календарь команды" variant="secondary" />
+        )}
         <AppButton onPress={() => navigation.navigate(Routes.UiKit)} title="UI Kit" variant="secondary" />
         <AppButton onPress={handleLogout} title="Выйти" variant="text" />
       </View>
