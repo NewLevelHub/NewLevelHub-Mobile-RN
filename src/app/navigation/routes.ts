@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from '@react-navigation/native';
+
 export const Routes = {
   Splash: 'Splash',
   Login: 'Login',
@@ -18,7 +20,34 @@ export const Routes = {
   Crm: 'Crm',
   Notifications: 'Notifications',
   TeamCalendar: 'TeamCalendar',
+  MainTabs: 'MainTabs',
 } as const;
+
+// ─── Nested stack param lists ─────────────────────────────────────────────────
+
+export type HomeStackParamList = {
+  [Routes.Home]: undefined;
+  [Routes.TeamCalendar]: undefined;
+  [Routes.AdminUsers]: undefined;
+  [Routes.AdminUserDetail]: { userId: number };
+  [Routes.Notifications]: undefined;
+  [Routes.UiKit]: undefined;
+};
+
+export type ProfileStackParamList = {
+  [Routes.Profile]: undefined;
+  [Routes.ProfileEdit]: undefined;
+  [Routes.ChangePassword]: undefined;
+};
+
+export type MainTabParamList = {
+  HomeTab: NavigatorScreenParams<HomeStackParamList>;
+  BookingsTab: undefined;
+  CrmTab: undefined;
+  ProfileTab: NavigatorScreenParams<ProfileStackParamList>;
+};
+
+// ─── Root stack ───────────────────────────────────────────────────────────────
 
 export type RootStackParamList = {
   [Routes.Splash]: undefined;
@@ -29,21 +58,9 @@ export type RootStackParamList = {
   [Routes.Invite]: { token?: string; title?: string; subtitle?: string };
   [Routes.ForgotPassword]: { title?: string; subtitle?: string } | undefined;
   [Routes.ResetPassword]: { token?: string; title?: string; subtitle?: string };
-  [Routes.Home]: undefined;
-  [Routes.Profile]: undefined;
-  [Routes.ProfileEdit]: undefined;
-  [Routes.ChangePassword]: undefined;
-  [Routes.UiKit]: undefined;
-  [Routes.AdminUsers]: undefined;
-  [Routes.AdminUserDetail]: { userId: number };
-  [Routes.Bookings]: undefined;
-  [Routes.Crm]: undefined;
-  [Routes.Notifications]: undefined;
-  [Routes.TeamCalendar]: undefined;
+  [Routes.MainTabs]: NavigatorScreenParams<MainTabParamList> | undefined;
 };
 
 export const authRequiredRoutes = new Set<string>([
-  Routes.Home, Routes.Profile, Routes.ProfileEdit, Routes.ChangePassword,
-  Routes.AdminUsers, Routes.AdminUserDetail, Routes.Bookings, Routes.Crm, Routes.Notifications,
-  Routes.TeamCalendar,
+  Routes.MainTabs,
 ]);

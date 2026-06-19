@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { useAuthStore } from '@/core/auth/authStore';
@@ -21,9 +23,12 @@ import { AvatarPicker } from '@/features/users/components/AvatarPicker';
 import { ActivityFeed } from '@/features/users/components/ActivityFeed';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppErrorBanner } from '@/shared/ui/AppErrorBanner';
-import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { Routes, type ProfileStackParamList, type RootStackParamList } from '@/app/navigation/routes';
 
-type Nav = NativeStackNavigationProp<RootStackParamList>;
+type Nav = CompositeNavigationProp<
+  NativeStackNavigationProp<ProfileStackParamList>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 const ROLE_LABELS: Record<string, string> = {
   [USER_ROLES.SUPERADMIN]: 'Суперадмин',
@@ -69,6 +74,7 @@ export function ProfileScreen() {
   const hasCompany = !!profile?.company && !isGuest;
 
   return (
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
     <ScrollView
       style={styles.scroll}
       contentContainerStyle={styles.container}
@@ -162,13 +168,17 @@ export function ProfileScreen() {
         />
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
+  safeArea: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  scroll: {
+    flex: 1,
   },
   container: {
     padding: 20,

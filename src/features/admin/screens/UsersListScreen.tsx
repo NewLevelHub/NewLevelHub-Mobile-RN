@@ -6,7 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
-import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { Routes, type HomeStackParamList } from '@/app/navigation/routes';
 import { AdminUserItem } from '@/features/admin/components/AdminUserItem';
 import { AdminUserSkeleton } from '@/features/admin/components/AdminUserSkeleton';
 import { AdminUsersEmptyState } from '@/features/admin/components/AdminUsersEmptyState';
@@ -14,7 +14,7 @@ import { AdminUsersFilters } from '@/features/admin/components/AdminUsersFilters
 import { useAdminUsers } from '@/features/admin/hooks/useAdminUsers';
 import type { User } from '@/shared/types';
 
-type Nav = NativeStackNavigationProp<RootStackParamList>;
+type Nav = NativeStackNavigationProp<HomeStackParamList>;
 
 export function UsersListScreen() {
   const user = useAuthStore((state) => state.user);
@@ -63,7 +63,7 @@ function UsersListContent() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <AdminUsersFilters
         search={filters.search}
         role={filters.role}

@@ -7,14 +7,14 @@ import type { RouteProp } from '@react-navigation/native';
 import { useAuthStore } from '@/core/auth/authStore';
 import { colors } from '@/core/theme/colors';
 import { USER_ROLES } from '@/shared/config/constants';
-import { Routes, type RootStackParamList } from '@/app/navigation/routes';
+import { Routes, type HomeStackParamList } from '@/app/navigation/routes';
 import { AppButton } from '@/shared/ui/AppButton';
 import { AppLoader } from '@/shared/ui/AppLoader';
 import { useAdminUserDetail } from '@/features/admin/hooks/useAdminUserDetail';
 import type { AdminUserDetail } from '@/shared/types';
 
-type Nav = NativeStackNavigationProp<RootStackParamList>;
-type RouteT = RouteProp<RootStackParamList, typeof Routes.AdminUserDetail>;
+type Nav = NativeStackNavigationProp<HomeStackParamList>;
+type RouteT = RouteProp<HomeStackParamList, typeof Routes.AdminUserDetail>;
 
 const ROLE_LABELS: Record<string, string> = {
   [USER_ROLES.SUPERADMIN]: 'Суперадмин',
@@ -138,7 +138,7 @@ function UserDetailContent() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.centered} edges={['bottom']}>
+      <SafeAreaView style={styles.centered} edges={[]}>
         <AppLoader />
       </SafeAreaView>
     );
@@ -146,7 +146,7 @@ function UserDetailContent() {
 
   if (isError || !user) {
     return (
-      <SafeAreaView style={styles.centered} edges={['bottom']}>
+      <SafeAreaView style={styles.centered} edges={[]}>
         <Text style={styles.errorText}>Не удалось загрузить пользователя</Text>
       </SafeAreaView>
     );
