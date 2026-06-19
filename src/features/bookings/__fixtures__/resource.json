@@ -1,0 +1,48 @@
+{
+  "id": 42,
+  "type": "meeting_room",
+  "name": "Переговорная A-201",
+  "floor_id": 3,
+  "floor_number": 3,
+  "floor_name": "Этаж 3",
+  "zone": "Open Space",
+  "photo": null,
+  "photo_url": "https://your-domain.com/media/resources/room.jpg",
+  "photos": [
+    {
+      "id": 1,
+      "image": "/media/resource_photos/1.jpg",
+      "image_url": "https://your-domain.com/media/resource_photos/1.jpg",
+      "created_at": "2024-05-01T08:00:00Z"
+    }
+  ],
+  "capacity": 8,
+  "equipment": {
+    "projector": true,
+    "tv": false,
+    "whiteboard": true,
+    "video_conf": true,
+    "monitor": false,
+    "dock": false,
+    "power_outlet": true
+  },
+  "is_active": true,
+  "is_hot_desk": false,
+  "availability_days": [0, 1, 2, 3, 4],
+  "parking_type": null,
+  "capsule_zone": "",
+  "assigned_company": null,
+  "assigned_company_name": null,
+  "status": "free",
+  "reason": null,
+  "available_at": null,
+  "schedule": [
+    {
+      "booking_id": 101,
+      "start": "2024-06-15T09:00:00+06:00",
+      "end": "2024-06-15T10:00:00+06:00",
+      "status": "upcoming",
+      "user_name": "Иван Петров"
+    }
+  ]
+}

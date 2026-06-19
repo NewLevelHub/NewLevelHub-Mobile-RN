@@ -1,0 +1,28 @@
+{
+  "id": 202,
+  "resource": 7,
+  "resource_name": "Капсула Q-03",
+  "resource_type": "capsule",
+  "capsule_zone": "quiet",
+  "user": 42,
+  "user_name": "Иван Петров",
+  "booked_by": {
+    "id": 42,
+    "full_name": "Иван Петров",
+    "avatar": "/media/avatars/42/photo.jpg"
+  },
+  "company": 5,
+  "start_time": "2024-06-15T09:00:00+06:00",
+  "end_time": "2024-06-15T17:00:00+06:00",
+  "status": "confirmed",
+  "description": "",
+  "cancelled_by": null,
+  "cancel_reason": null,
+  "participants": [],
+  "recurring_booking_id": null,
+  "checked_in_at": null,
+  "qr_code": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "qr_image": "https://your-domain.com/api/v1/bookings/reservations/qr/7c9e6679-7425-40de-944b-e07fc1f90ae7/image/",
+  "created_at": "2024-06-14T12:00:00Z",
+  "updated_at": "2024-06-14T12:00:00Z"
+}

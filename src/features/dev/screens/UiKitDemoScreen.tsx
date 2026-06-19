@@ -20,6 +20,95 @@ import {
   FloorLoadBar,
   QuickActionRow,
 } from '@/features/core/components';
+import {
+  ResourceStatusBadge,
+  ResourceTypeChip,
+  EquipmentChips,
+  TimeRangeLabel,
+  ScheduleSlotBar,
+  ResourceCard,
+  ReservationCard,
+  BookingFilterChips,
+  ConflictErrorBanner,
+} from '@/features/bookings/components';
+import type { Resource } from '@/features/bookings/types/resource';
+import type { Reservation } from '@/features/bookings/types/reservation';
+
+const DEMO_RESOURCE_FREE: Resource = {
+  id: 1,
+  type: 'meeting_room',
+  name: 'Переговорная A-201',
+  floor_id: 3,
+  floor_number: 3,
+  floor_name: 'Этаж 3',
+  zone: 'Open Space',
+  photoUrl: null,
+  photos: [],
+  capacity: 8,
+  equipment: { projector: true, tv: false, whiteboard: true, video_conf: true, monitor: false, dock: false, power_outlet: false },
+  isActive: true,
+  isHotDesk: false,
+  availabilityDays: [0, 1, 2, 3, 4],
+  parkingType: null,
+  capsuleZone: '',
+  assignedCompany: null,
+  assignedCompanyName: null,
+  status: 'free',
+  reason: null,
+  availableAt: null,
+};
+
+const DEMO_RESOURCE_OCCUPIED: Resource = {
+  ...DEMO_RESOURCE_FREE,
+  id: 2,
+  type: 'desk',
+  name: 'Стол B-12',
+  floor_name: 'Этаж 2',
+  floor_number: 2,
+  capacity: null,
+  status: 'occupied',
+};
+
+const DEMO_RESOURCE_SOON: Resource = {
+  ...DEMO_RESOURCE_FREE,
+  id: 3,
+  type: 'capsule',
+  name: 'Капсула Q-03',
+  floor_name: 'Этаж 1',
+  floor_number: 1,
+  capacity: 1,
+  status: 'soon_available',
+  availableAt: '2026-06-19T11:30:00+06:00',
+};
+
+const BASE_RESERVATION: Reservation = {
+  id: 101,
+  resource: 42,
+  resourceName: 'Переговорная A-201',
+  resourceType: 'meeting_room',
+  capsuleZone: '',
+  user: 42,
+  userName: 'Иван Петров',
+  bookedBy: { id: 42, full_name: 'Иван Петров', avatar: null },
+  company: 5,
+  startTime: '2026-06-19T09:00:00+06:00',
+  endTime: '2026-06-19T10:00:00+06:00',
+  status: 'confirmed',
+  description: '',
+  cancelledBy: null,
+  cancelReason: null,
+  participants: [],
+  recurringBookingId: null,
+  checkedInAt: null,
+  qrCode: null,
+  qrImageUrl: null,
+  createdAt: '2026-06-18T12:00:00Z',
+  updatedAt: '2026-06-18T12:00:00Z',
+};
+
+const DEMO_RESERVATION_CONFIRMED: Reservation = BASE_RESERVATION;
+const DEMO_RESERVATION_CANCELLED: Reservation = { ...BASE_RESERVATION, id: 102, status: 'cancelled', resourceName: 'Стол B-12', resourceType: 'desk' };
+const DEMO_RESERVATION_NO_SHOW: Reservation = { ...BASE_RESERVATION, id: 103, status: 'no_show', resourceName: 'Парковка P-05', resourceType: 'parking' };
 
 export function UiKitDemoScreen() {
   const [text, setText] = useState('');
@@ -275,6 +364,129 @@ export function UiKitDemoScreen() {
             onPress={(action) => { void action; }}
           />
         </Section>
+
+        {/* ── Bookings UI-kit ────────────────────────────────────────── */}
+
+        <Section title="ResourceStatusBadge">
+          <ResourceStatusBadge status="free" />
+          <ResourceStatusBadge status="occupied" />
+          <ResourceStatusBadge status="soon_available" availableAt="2026-06-19T11:30:00+06:00" />
+          <ResourceStatusBadge status="blocked" reason="Технические работы" />
+        </Section>
+
+        <Section title="ResourceTypeChip">
+          <View style={styles.row}>
+            <ResourceTypeChip type="desk" />
+            <ResourceTypeChip type="meeting_room" />
+            <ResourceTypeChip type="parking" />
+            <ResourceTypeChip type="capsule" />
+          </View>
+        </Section>
+
+        <Section title="EquipmentChips">
+          <EquipmentChips
+            equipment={{
+              projector: true,
+              tv: false,
+              whiteboard: true,
+              video_conf: true,
+              monitor: false,
+              dock: false,
+              power_outlet: true,
+            }}
+          />
+          <Text style={styles.hint}>Только оборудование с true-значением</Text>
+          <EquipmentChips
+            equipment={{
+              projector: false,
+              tv: true,
+              whiteboard: false,
+              video_conf: false,
+              monitor: true,
+              dock: true,
+              power_outlet: false,
+            }}
+          />
+        </Section>
+
+        <Section title="TimeRangeLabel">
+          <TimeRangeLabel
+            start="2026-06-19T09:00:00+06:00"
+            end="2026-06-19T10:30:00+06:00"
+          />
+          <TimeRangeLabel
+            start="2026-12-31T18:00:00+06:00"
+            end="2026-12-31T20:00:00+06:00"
+          />
+        </Section>
+
+        <Section title="ScheduleSlotBar">
+          <Text style={styles.hint}>1 занятый слот 09:00–10:00</Text>
+          <ScheduleSlotBar
+            slots={[
+              { booking_id: 1, start: '2026-06-19T09:00:00+06:00', end: '2026-06-19T10:00:00+06:00' },
+            ]}
+          />
+          <Text style={styles.hint}>Несколько слотов</Text>
+          <ScheduleSlotBar
+            slots={[
+              { booking_id: 2, start: '2026-06-19T08:00:00+06:00', end: '2026-06-19T09:30:00+06:00' },
+              { booking_id: 3, start: '2026-06-19T13:00:00+06:00', end: '2026-06-19T15:00:00+06:00' },
+              { booking_id: 4, start: '2026-06-19T17:30:00+06:00', end: '2026-06-19T19:00:00+06:00' },
+            ]}
+          />
+        </Section>
+
+        <Section title="ResourceCard">
+          <ResourceCard
+            resource={DEMO_RESOURCE_FREE}
+            onPress={() => {}}
+          />
+          <ResourceCard
+            resource={DEMO_RESOURCE_OCCUPIED}
+            onPress={() => {}}
+          />
+          <ResourceCard
+            resource={DEMO_RESOURCE_SOON}
+            onPress={() => {}}
+          />
+        </Section>
+
+        <Section title="ReservationCard">
+          <ReservationCard reservation={DEMO_RESERVATION_CONFIRMED} onPress={() => {}} />
+          <ReservationCard reservation={DEMO_RESERVATION_CANCELLED} onPress={() => {}} />
+          <ReservationCard reservation={DEMO_RESERVATION_NO_SHOW} onPress={() => {}} />
+        </Section>
+
+        <Section title="BookingFilterChips — тип + статус">
+          <BookingFilterChips
+            selectedType={null}
+            onTypeChange={() => {}}
+            selectedStatus="upcoming"
+            onStatusChange={() => {}}
+          />
+        </Section>
+
+        <Section title="BookingFilterChips — тип + этаж">
+          <BookingFilterChips
+            selectedType="meeting_room"
+            onTypeChange={() => {}}
+            floors={[
+              { id: 1, label: 'Этаж 1' },
+              { id: 2, label: 'Этаж 2' },
+              { id: 3, label: 'Этаж 3' },
+            ]}
+            selectedFloor={2}
+            onFloorChange={() => {}}
+          />
+        </Section>
+
+        <Section title="ConflictErrorBanner">
+          <ConflictErrorBanner visible errorCode="BOOKING_CONFLICT" />
+          <ConflictErrorBanner visible errorCode="DESK_USER_OVERLAP" />
+          <Text style={styles.hint}>Скрытый (visible=false)</Text>
+          <ConflictErrorBanner visible={false} errorCode="BOOKING_CONFLICT" />
+        </Section>
       </ScrollView>
     </SafeAreaView>
   );
@@ -322,5 +534,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
 });
