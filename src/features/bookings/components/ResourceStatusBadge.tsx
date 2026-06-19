@@ -5,7 +5,7 @@ import { RESOURCE_STATUS_LABELS } from '@/shared/lib/labels';
 import type { ResourceStatus } from '@/features/bookings/types/resource';
 
 interface Props {
-  status: ResourceStatus;
+  status: ResourceStatus | null;
   reason?: string | null;
   availableAt?: string | null;
 }
@@ -23,6 +23,7 @@ function extractTime(iso: string): string {
 }
 
 export const ResourceStatusBadge = React.memo<Props>(({ status, availableAt }) => {
+  if (status == null) return null;
   const palette = STATUS_PALETTE[status] ?? STATUS_PALETTE.blocked;
   const label = RESOURCE_STATUS_LABELS[status] ?? status;
   const suffix =

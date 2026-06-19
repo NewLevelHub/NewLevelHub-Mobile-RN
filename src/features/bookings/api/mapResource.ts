@@ -1,5 +1,5 @@
 import { resolveMediaUrl } from '@/core/config/apiConfig';
-import type { Resource, ResourcePhoto, ScheduleSlot } from '@/features/bookings/types/resource';
+import type { Resource, ResourcePhoto, ResourceStatus, ScheduleSlot } from '@/features/bookings/types/resource';
 
 interface RawPhoto {
   id: number;
@@ -18,7 +18,9 @@ interface RawScheduleSlot {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapResource(raw: Record<string, any>): Resource {
-  const resolvedPhotoUrl = resolveMediaUrl(raw.photo_url as string | null);
+  // Detail endpoint returns "photo" (full URL); list endpoint returns "photo_url"
+  const rawPhotoUrl = (raw.photo as string | null) ?? (raw.photo_url as string | null);
+  const resolvedPhotoUrl = resolveMediaUrl(rawPhotoUrl);
 
   return {
     id: raw.id as number,
@@ -48,7 +50,7 @@ export function mapResource(raw: Record<string, any>): Resource {
     capsuleZone: (raw.capsule_zone as string) ?? '',
     assignedCompany: (raw.assigned_company as number | null) ?? null,
     assignedCompanyName: (raw.assigned_company_name as string | null) ?? null,
-    status: raw.status,
+    status: (raw.status as ResourceStatus) ?? null,
     reason: (raw.reason as string | null) ?? null,
     availableAt: (raw.available_at as string | null) ?? null,
     schedule: Array.isArray(raw.schedule)
