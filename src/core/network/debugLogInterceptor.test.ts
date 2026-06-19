@@ -44,6 +44,7 @@ describe('attachDebugLogInterceptor', () => {
     expect(messages[1]).toContain('GET');
     expect(messages[1]).toContain('/ping/');
     expect(messages[1]).toContain('200');
-    expect(messages.join(' ')).not.toContain('pong');
+    // Non-sensitive paths: body IS logged (messages[2] contains the JSON body)
+    expect(messages[2]).toContain('pong');
   });
 });

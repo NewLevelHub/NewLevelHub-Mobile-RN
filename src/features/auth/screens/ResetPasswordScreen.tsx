@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
@@ -43,6 +44,7 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
 
   if (__DEV__ && !token) {
     return (
+      <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.debugTitle}>Debug: токен сброса пароля</Text>
         <AppTextField
@@ -68,12 +70,13 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           variant="text"
         />
       </ScrollView>
+      </SafeAreaView>
     );
   }
 
   if (status === 'success') {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered} edges={['top']}>
         <View style={styles.card}>
           <View style={[styles.iconCircle, styles.iconSuccess]}>
             <Text style={styles.iconText}>✓</Text>
@@ -84,13 +87,13 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           </Text>
           <AppButton onPress={handleGoToLogin} title="Войти" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (status === 'token_invalid' || !token) {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered} edges={['top']}>
         <View style={styles.card}>
           <View style={[styles.iconCircle, styles.iconError]}>
             <Text style={styles.iconText}>✕</Text>
@@ -102,13 +105,13 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           <AppButton onPress={handleGoToForgotPassword} title="Сбросить пароль" />
           <AppButton onPress={handleGoToLogin} title="Вернуться ко входу" variant="text" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (status === 'token_expired') {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered} edges={['top']}>
         <View style={styles.card}>
           <View style={[styles.iconCircle, styles.iconWarning]}>
             <Text style={styles.iconText}>!</Text>
@@ -120,13 +123,13 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           <AppButton onPress={handleGoToForgotPassword} title="Запросить снова" />
           <AppButton onPress={handleGoToLogin} title="Вернуться ко входу" variant="text" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (status === 'token_used') {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered} edges={['top']}>
         <View style={styles.card}>
           <View style={[styles.iconCircle, styles.iconInfo]}>
             <Text style={styles.iconText}>i</Text>
@@ -138,15 +141,16 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           <AppButton onPress={handleGoToForgotPassword} title="Запросить снова" />
           <AppButton onPress={handleGoToLogin} title="Вернуться ко входу" variant="text" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.flex}
-    >
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flex}
+      >
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
@@ -188,14 +192,18 @@ export function ResetPasswordScreen({ route, navigation }: Props) {
           title="Сохранить пароль"
         />
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: {
+  safe: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  flex: {
+    flex: 1,
   },
   container: {
     padding: 24,

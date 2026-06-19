@@ -1,21 +1,8 @@
 import { mapCalendarEvent, mapCalendarEvents } from './mapCalendarEvent';
 
-// ─── Fixtures (from API docs) ─────────────────────────────────────────────────
+import CALENDAR_EVENTS_FIXTURE from '../__fixtures__/calendar_events.json';
 
-const LEAVE_FIXTURE = {
-  id: 'leave-15',
-  event_type: 'leave',
-  source_id: 15,
-  title: 'Отсутствие: Айгуль Серикова',
-  start: '2024-06-10',
-  end: '2024-06-14',
-  all_day: true,
-  status: 'approved',
-  user_id: 42,
-  user_name: 'Айгуль Серикова',
-  leave_type: 'vacation',
-  comment: 'Семейный отпуск',
-};
+const LEAVE_FIXTURE = CALENDAR_EVENTS_FIXTURE[0];
 
 // ─── mapCalendarEvent ─────────────────────────────────────────────────────────
 
@@ -62,6 +49,14 @@ describe('mapCalendarEvent', () => {
 // ─── mapCalendarEvents ────────────────────────────────────────────────────────
 
 describe('mapCalendarEvents', () => {
+  it('maps full fixture array (3 events)', () => {
+    const result = mapCalendarEvents(CALENDAR_EVENTS_FIXTURE);
+    expect(result).toHaveLength(3);
+    expect(result[0].id).toBe('leave-15');
+    expect(result[1].leave_type).toBe('remote');
+    expect(result[2].leave_type).toBe('sick_leave');
+  });
+
   it('maps an array of two events', () => {
     const raw = [
       LEAVE_FIXTURE,

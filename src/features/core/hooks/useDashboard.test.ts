@@ -72,13 +72,16 @@ describe('DASHBOARD_QUERY_KEY', () => {
 
 // ─── useDashboard ─────────────────────────────────────────────────────────────
 
+// Note: @testing-library/react-native v14 returns a Promise from renderHook().
+// All tests must await renderHook().
+
 describe('useDashboard', () => {
   it('starts in loading state with no data', async () => {
     // Never resolves so we can observe the initial loading state
     mockFetch.mockImplementation(() => new Promise(() => {}));
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -91,7 +94,7 @@ describe('useDashboard', () => {
     mockFetch.mockResolvedValue(EMPLOYEE_DATA);
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -106,7 +109,7 @@ describe('useDashboard', () => {
     mockFetch.mockResolvedValue(GUEST_DATA);
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -124,7 +127,7 @@ describe('useDashboard', () => {
     mockFetch.mockRejectedValue(serverError);
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -145,7 +148,7 @@ describe('useDashboard', () => {
     mockFetch.mockRejectedValue(rawAxiosError);
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -161,7 +164,7 @@ describe('useDashboard', () => {
       .mockRejectedValueOnce(new ApiException({ message: 'fail', statusCode: 500 }))
       .mockResolvedValueOnce(EMPLOYEE_DATA);
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -178,7 +181,7 @@ describe('useDashboard', () => {
     mockFetch.mockResolvedValue(EMPLOYEE_DATA);
     const queryClient = makeQueryClient();
 
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
@@ -197,14 +200,14 @@ describe('useDashboard', () => {
     const queryClient = makeQueryClient();
 
     // First mount — populates cache
-    const first = renderHook(() => useDashboard(), {
+    const first = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
     await waitFor(() => expect(first.result.current.isLoading).toBe(false));
-    first.unmount();
+    await first.unmount();
 
     // Second mount — data is still fresh, no extra call expected
-    const second = renderHook(() => useDashboard(), {
+    const second = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
     await waitFor(() => expect(second.result.current.isLoading).toBe(false));
@@ -222,7 +225,7 @@ describe('useDashboard', () => {
       );
 
     const queryClient = makeQueryClient();
-    const { result } = renderHook(() => useDashboard(), {
+    const { result } = await renderHook(() => useDashboard(), {
       wrapper: makeWrapper(queryClient),
     });
 
