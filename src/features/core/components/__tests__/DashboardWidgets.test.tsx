@@ -69,7 +69,7 @@ describe('BookingCard', () => {
 
   it('shows pending status label', async () => {
     await render(<BookingCard item={BOOKING_PENDING} />);
-    expect(screen.getByText('На рассмотрении')).toBeTruthy();
+    expect(screen.getByText('Ожидание')).toBeTruthy();
   });
 
   it('hides company name when absent', async () => {

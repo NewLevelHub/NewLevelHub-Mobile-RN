@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Routes, type RootStackParamList } from '@/app/navigation/routes';
@@ -22,7 +23,7 @@ export function ForgotPasswordScreen({ navigation }: Props) {
 
   if (status === 'success') {
     return (
-      <View style={styles.centered}>
+      <SafeAreaView style={styles.centered} edges={['top']}>
         <View style={styles.card}>
           <View style={[styles.iconCircle, styles.iconSuccess]}>
             <Text style={styles.iconText}>✓</Text>
@@ -37,15 +38,16 @@ export function ForgotPasswordScreen({ navigation }: Props) {
             title="Вернуться ко входу"
           />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.flex}
-    >
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flex}
+      >
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
@@ -91,14 +93,18 @@ export function ForgotPasswordScreen({ navigation }: Props) {
           variant="text"
         />
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: {
+  safe: {
     flex: 1,
     backgroundColor: colors.page,
+  },
+  flex: {
+    flex: 1,
   },
   container: {
     padding: 24,

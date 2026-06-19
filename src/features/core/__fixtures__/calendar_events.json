@@ -1,0 +1,44 @@
+[
+  {
+    "id": "leave-15",
+    "event_type": "leave",
+    "source_id": 15,
+    "title": "Отсутствие: Айгуль Серикова",
+    "start": "2024-06-10",
+    "end": "2024-06-14",
+    "all_day": true,
+    "status": "approved",
+    "user_id": 42,
+    "user_name": "Айгуль Серикова",
+    "leave_type": "vacation",
+    "comment": "Семейный отпуск"
+  },
+  {
+    "id": "leave-16",
+    "event_type": "leave",
+    "source_id": 16,
+    "title": "Отсутствие: Иван Петров",
+    "start": "2024-06-17",
+    "end": "2024-06-18",
+    "all_day": true,
+    "status": "approved",
+    "user_id": 7,
+    "user_name": "Иван Петров",
+    "leave_type": "remote",
+    "comment": null
+  },
+  {
+    "id": "leave-17",
+    "event_type": "leave",
+    "source_id": 17,
+    "title": "Отсутствие: Мария Сатова",
+    "start": "2024-06-20",
+    "end": "2024-06-21",
+    "all_day": true,
+    "status": "approved",
+    "user_id": 12,
+    "user_name": "Мария Сатова",
+    "leave_type": "sick_leave",
+    "comment": null
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "role": "superadmin",
+  "user": { "id": 1, "full_name": "Супер Админ", "avatar": "/media/avatars/1/photo.jpg" },
+  "total_companies": 24,
+  "total_users": 318,
+  "bookings_today": 47,
+  "bookings_week_delta": 5,
+  "space_load_pct": 62,
+  "open_service_requests": 8,
+  "service_requests_closed_today": 3,
+  "new_companies_last_7d": 2,
+  "recent_events": [
+    {
+      "event_type": "booking",
+      "id": 101,
+      "title": "Переговорная A-201 — Иван Петров",
+      "start_time": "2024-06-15T09:00:00Z",
+      "status": "confirmed"
+    }
+  ],
+  "quick_actions": ["invite_user", "manage_bookings"],
+  "bookings_recent": [
+    {
+      "id": 101,
+      "resource_name": "Переговорная A-201",
+      "user_name": "Иван Петров",
+      "company_name": "ТОО Астана Бизнес",
+      "start_time": "2024-06-15T09:00:00Z",
+      "end_time": "2024-06-15T10:00:00Z",
+      "status": "confirmed"
+    }
+  ],
+  "announcements_recent": [
+    {
+      "id": 7,
+      "title": "Плановое отключение лифтов",
+      "text": "Завтра с 10:00 до 12:00...",
+      "created_at": "2024-06-14T08:00:00Z"
+    }
+  ],
+  "floor_load": [
+    {
+      "floor_id": 3,
+      "floor_number": 3,
+      "floor_name": "Этаж 3",
+      "total": 40,
+      "occupied": 28,
+      "occupancy_pct": 70
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "role": "guest",
+  "user": { "id": 99, "full_name": "Гость Тестов", "avatar": null },
+  "my_bookings_today": 1,
+  "quick_booking": { "available_desks": 45, "available_rooms": 12 },
+  "bc_announcements": [
+    {
+      "id": 7,
+      "title": "Добро пожаловать в New Level Hub",
+      "body": "Инструкция для гостей...",
+      "category": "info",
+      "scope": "building",
+      "created_at": "2024-06-01T08:00:00Z"
+    }
+  ]
+}
