@@ -10,6 +10,8 @@ export interface ResourceFilters {
   capacityMin: number;
   search: string;
   ordering: string;
+  availableFrom: string | null;
+  availableTo: string | null;
 }
 
 const DEFAULT_FILTERS: ResourceFilters = {
@@ -18,6 +20,8 @@ const DEFAULT_FILTERS: ResourceFilters = {
   capacityMin: 0,
   search: '',
   ordering: 'name',
+  availableFrom: null,
+  availableTo: null,
 };
 
 function extractNextPage(next: string | null): number | undefined {
@@ -43,8 +47,20 @@ export function useResources() {
       params.capacity_min = filters.capacityMin;
     }
     if (debouncedSearch) params.search = debouncedSearch;
+    if (filters.availableFrom && filters.availableTo) {
+      params.available_from = filters.availableFrom;
+      params.available_to = filters.availableTo;
+    }
     return params;
-  }, [filters.type, filters.floor, filters.capacityMin, debouncedSearch, filters.ordering]);
+  }, [
+    filters.type,
+    filters.floor,
+    filters.capacityMin,
+    debouncedSearch,
+    filters.ordering,
+    filters.availableFrom,
+    filters.availableTo,
+  ]);
 
   const query = useInfiniteQuery({
     queryKey: ['resources', queryParams],
@@ -104,6 +120,10 @@ export function useResources() {
     setFilters((f) => ({ ...f, search }));
   }, []);
 
+  const onAvailabilityChange = useCallback((from: string | null, to: string | null) => {
+    setFilters((f) => ({ ...f, availableFrom: from, availableTo: to }));
+  }, []);
+
   const onLoadMore = useCallback(() => {
     if (query.hasNextPage && !query.isFetchingNextPage) {
       void query.fetchNextPage();
@@ -129,6 +149,7 @@ export function useResources() {
       onCapacityIncrement,
       onCapacityDecrement,
       onSearchChange,
+      onAvailabilityChange,
       onLoadMore,
       onRefresh,
     },
