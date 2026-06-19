@@ -17,6 +17,8 @@ export const Routes = {
   AdminUsers: 'AdminUsers',
   AdminUserDetail: 'AdminUserDetail',
   Bookings: 'Bookings',
+  ResourceCatalog: 'ResourceCatalog',
+  ResourceDetail: 'ResourceDetail',
   Crm: 'Crm',
   Notifications: 'Notifications',
   TeamCalendar: 'TeamCalendar',
@@ -40,9 +42,14 @@ export type ProfileStackParamList = {
   [Routes.ChangePassword]: undefined;
 };
 
+export type BookingsStackParamList = {
+  [Routes.ResourceCatalog]: undefined;
+  [Routes.ResourceDetail]: { resourceId: number };
+};
+
 export type MainTabParamList = {
   HomeTab: NavigatorScreenParams<HomeStackParamList>;
-  BookingsTab: undefined;
+  BookingsTab: NavigatorScreenParams<BookingsStackParamList>;
   CrmTab: undefined;
   ProfileTab: NavigatorScreenParams<ProfileStackParamList>;
 };

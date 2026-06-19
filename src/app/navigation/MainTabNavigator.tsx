@@ -5,7 +5,7 @@ import { Routes } from '@/app/navigation/routes';
 import type { MainTabParamList } from '@/app/navigation/routes';
 import { HomeStack } from '@/app/navigation/HomeStack';
 import { ProfileStack } from '@/app/navigation/ProfileStack';
-import { BookingsScreen } from '@/features/bookings/screens/BookingsScreen';
+import { BookingsStack } from '@/app/navigation/BookingsStack';
 import { CrmScreen } from '@/features/crm/screens/CrmScreen';
 import { useAuthStore } from '@/core/auth/authStore';
 import { USER_ROLES } from '@/shared/config/constants';
@@ -63,7 +63,7 @@ export function MainTabNavigator() {
       />
       <Tab.Screen
         name="BookingsTab"
-        component={BookingsScreen}
+        component={BookingsStack}
         options={{
           title: 'Бронирования',
           tabBarIcon: ({ color, size }) => (
