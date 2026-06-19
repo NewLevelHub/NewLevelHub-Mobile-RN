@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/core/theme/colors';
 import { TimeRangeLabel } from '@/features/bookings/components/TimeRangeLabel';
 import { RESERVATION_STATUS_LABELS, RESOURCE_TYPE_LABELS } from '@/shared/lib/labels';
@@ -25,7 +25,11 @@ export const ReservationCard = React.memo<Props>(({ reservation, onPress }) => {
     : null;
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
+    <Pressable
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      onPress={onPress}
+    >
       <View style={styles.header}>
         <Text style={styles.name} numberOfLines={1}>
           {reservation.resourceName}
@@ -36,7 +40,7 @@ export const ReservationCard = React.memo<Props>(({ reservation, onPress }) => {
       </View>
       <TimeRangeLabel start={reservation.startTime} end={reservation.endTime} />
       {typeLabel ? <Text style={styles.type}>{typeLabel}</Text> : null}
-    </TouchableOpacity>
+    </Pressable>
   );
 });
 
@@ -50,6 +54,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 6,
+  },
+  cardPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.99 }],
   },
   header: {
     flexDirection: 'row',

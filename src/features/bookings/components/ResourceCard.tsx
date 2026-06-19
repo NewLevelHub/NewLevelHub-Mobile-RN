@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { colors } from '@/core/theme/colors';
 import { ResourceStatusBadge } from '@/features/bookings/components/ResourceStatusBadge';
@@ -13,7 +13,11 @@ interface Props {
 
 export const ResourceCard = React.memo<Props>(({ resource, onPress }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
+    <Pressable
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      onPress={onPress}
+    >
       <Image
         source={resource.photoUrl ? { uri: resource.photoUrl } : null}
         style={styles.photo}
@@ -36,7 +40,7 @@ export const ResourceCard = React.memo<Props>(({ resource, onPress }) => {
           availableAt={resource.availableAt}
         />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 });
 
@@ -49,6 +53,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  cardPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.99 }],
   },
   photo: {
     height: 140,

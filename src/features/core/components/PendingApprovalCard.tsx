@@ -115,6 +115,7 @@ function Actions({
     <View style={[styles.actions, disabled && styles.actionsDisabled]}>
       {onReject && (
         <Pressable
+          accessibilityRole="button"
           style={({ pressed }) => [styles.actionBtn, styles.rejectBtn, pressed && !disabled && styles.pressed]}
           onPress={onReject}
         >
@@ -123,6 +124,7 @@ function Actions({
       )}
       {onApprove && (
         <Pressable
+          accessibilityRole="button"
           style={({ pressed }) => [styles.actionBtn, styles.approveBtn, pressed && !disabled && styles.pressed]}
           onPress={onApprove}
         >

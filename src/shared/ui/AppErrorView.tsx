@@ -1,24 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { colors } from '@/core/theme/colors';
 import { AppButton } from './AppButton';
 
 interface AppErrorViewProps {
-  icon?: string;
   title?: string;
   message?: string;
   onRetry?: () => void;
 }
 
 export function AppErrorView({
-  icon,
   title,
   message = 'Что-то пошло не так',
   onRetry,
 }: AppErrorViewProps) {
   return (
     <View style={styles.container}>
-      {icon ? <Text style={styles.icon}>{icon}</Text> : null}
+      <View style={styles.iconContainer}>
+        <Ionicons name="alert-circle-outline" size={48} color={colors.textSubtle} />
+      </View>
       {title ? <Text style={styles.title}>{title}</Text> : null}
       <Text style={styles.message}>{message}</Text>
       {onRetry ? (
@@ -39,8 +40,13 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 24,
   },
-  icon: {
-    fontSize: 64,
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.raised,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     color: colors.textPrimary,
